@@ -26,7 +26,8 @@ class Task:
 
 
 def load_tasks(
-    task_ids: tuple[str, ...] = TASK_IDS, data_dir: Path = DATA_DIR,
+    task_ids: tuple[str, ...] = TASK_IDS,
+    data_dir: Path = DATA_DIR,
 ) -> tuple[Task, ...]:
     """Verify the dataset and return tasks in registered order, failing on omissions."""
     manifest = json.loads((data_dir / "manifest.json").read_text(encoding="utf-8"))

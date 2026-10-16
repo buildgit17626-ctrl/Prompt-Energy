@@ -1,3 +1,4 @@
+import gzip
 import hashlib
 import json
 import random
@@ -10,8 +11,10 @@ from prompt_energy.tasks import DATA_DIR, load_tasks
 
 
 def test_registration_and_order():
-    expected = tuple(f"HumanEval/{i}" for i in sorted(
-        random.Random(TASK_SELECTION_SEED).sample(range(164), TASK_COUNT)))
+    expected = tuple(
+        f"HumanEval/{i}"
+        for i in sorted(random.Random(TASK_SELECTION_SEED).sample(range(164), TASK_COUNT))
+    )
     assert TASK_IDS == expected
     assert tuple(task.task_id for task in load_tasks()) == expected
     assert len(set(TASK_IDS)) == 40
@@ -36,7 +39,30 @@ def test_corrupt_archive_fails(tmp_path):
 
 def test_provenance():
     manifest = json.loads((DATA_DIR / "manifest.json").read_text())
-    assert hashlib.sha256((DATA_DIR / "HumanEval.jsonl.gz").read_bytes()).hexdigest() == (
-        manifest["sha256"])
+    assert (
+        hashlib.sha256((DATA_DIR / "HumanEval.jsonl.gz").read_bytes()).hexdigest()
+        == (manifest["sha256"])
+    )
     assert manifest["license"] == "MIT"
     assert "Copyright (c) OpenAI" in (DATA_DIR / "HumanEval.LICENSE").read_text()
+
+
+@pytest.mark.parametrize("problem", ["duplicate", "missing", "field", "entry_point"])
+def test_malformed_records_fail(tmp_path, problem):
+    with gzip.open(DATA_DIR / "HumanEval.jsonl.gz", "rt", encoding="utf-8") as stream:
+        rows = [json.loads(line) for line in stream]
+    if problem == "duplicate":
+        rows.append(rows[0])
+    elif problem == "missing":
+        rows.pop()
+    elif problem == "field":
+        rows[0]["prompt"] = 42
+    else:
+        rows[0]["entry_point"] = "not a Python identifier"
+    archive = tmp_path / "HumanEval.jsonl.gz"
+    with gzip.open(archive, "wt", encoding="utf-8") as stream:
+        stream.write("\n".join(json.dumps(row) for row in rows))
+    manifest = {"sha256": hashlib.sha256(archive.read_bytes()).hexdigest()}
+    (tmp_path / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_tasks(data_dir=tmp_path)
