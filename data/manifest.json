@@ -1,0 +1,13 @@
+{
+  "dataset": "HumanEval",
+  "revision": "6d43fb980f9fee3c892a914eda09951f772ad10d",
+  "source": "https://raw.githubusercontent.com/openai/human-eval/6d43fb980f9fee3c892a914eda09951f772ad10d/data/HumanEval.jsonl.gz",
+  "sha256": "b796127e635a67f93fb35c04f4cb03cf06f38c8072ee7cee8833d7bee06979ef",
+  "license": "MIT",
+  "license_file": "HumanEval.LICENSE",
+  "retrieved_date": "2026-10-16",
+  "population_count": 164,
+  "selection_seed": 1729,
+  "selection_method": "random.Random(1729).sample(range(164), 40), then numeric sort",
+  "note": "Original archive, unmodified. Evaluation uses the 40 explicit IDs in experiments/config.py."
+}

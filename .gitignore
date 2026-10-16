@@ -1,0 +1,10 @@
+.venv/
+.python311/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+results/*
+!results/.gitkeep
+!results/samples/
+!results/samples/**
