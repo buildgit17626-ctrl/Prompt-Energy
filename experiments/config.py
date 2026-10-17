@@ -1,4 +1,4 @@
-"""P1 registration. Change experimental choices only before generation, with a log."""
+"""Study registration. P2 revisions await owner review before any model call."""
 
 MODELS = ("qwen2.5-coder:0.5b", "qwen2.5-coder:1.5b")
 MODEL_LICENSES = dict.fromkeys(MODELS, "Apache-2.0")
@@ -83,7 +83,24 @@ PROMPTS = {
         "instruction": "Reason step by step, then provide the completed Python function.",
         "examples": 0,
     },
-    "P5": {"instruction": "Complete Python function:", "examples": 0},
+    "P5": {
+        "instruction": (
+            "Please read the following Python function signature and docstring carefully. "
+            "Complete the function so that it satisfies the docstring and handles edge cases "
+            "correctly. Return only the code for the completed function, with no explanation."
+        ),
+        "examples": 0,
+    },
+}
+SYSTEM_PROMPT = "You are a helpful coding assistant."
+WARMUP_PROMPT = "Respond with the single word READY."
+PROMPT_ASSEMBLY = {
+    "separator": "\n\n",
+    "example_template": (
+        "Example task:\n{example_prompt}\nExample solution:\n```python\n{example_solution}\n```"
+    ),
+    "task_template": "Task:\n{task_prompt}",
+    "final_newline": "\n",
 }
 SANDBOX = {
     "timeout_seconds": 5.0,
@@ -93,15 +110,47 @@ SANDBOX = {
     "cleanup_timeout_seconds": 2.0,
     "cleanup_poll_seconds": 0.05,
 }
-# Future contract only: P2 must register num_predict and thread count before runs.
+# Fixed before generation; keep_alive for scored runs is resolved by CACHE_POLICY.
 OLLAMA = {
     "base_url": "http://127.0.0.1:11434",
     "endpoint": "/api/generate",
     "temperature": 0,
     "seed": EXECUTION_SEED,
-    "num_predict": None,
+    "num_predict": 768,
+    "num_ctx": 4096,
+    "num_thread": 8,
     "stream": False,
     "num_gpu": 0,
+    "keep_alive": -1,
+    "stop": [],
+    "request_timeout_seconds": 300,
+}
+CACHE_POLICY = {
+    "probe_requests": 2,
+    "compare_fields": ("response", "prompt_eval_count", "prompt_eval_duration"),
+    "probe_keep_alive": -1,
+    # A deliberately conservative signal: timing noise may also cause a decrease.
+    # This is not a claim that lower duration proves token-cache reuse.
+    "reuse_signal": "second_count_lt_first_or_second_duration_lt_first",
+    "on_reuse_keep_alive": 0,
+    "otherwise_keep_alive": -1,
+    "scope": "all_scored_runs_if_any_model_signals_reuse",
+    "invalid_probe": "stop_before_scored_generation",
+    "freeze_decision_before_smoke": True,
+    "verify_unloaded_before_scored_if_zero": True,
+}
+EXTRACTION = {
+    "fence_labels": ("python", "py", ""),
+    "selection": "last_complete_parseable_block_defining_required_top_level_function",
+    "fallback": "whole_stripped_response",
+    "prepend_task_prelude": True,
+}
+P2_SMOKE = {
+    "model": MODELS[1],
+    "task_ids": TASK_IDS[:5],
+    "prompt_ids": tuple(PROMPTS),
+    "repeats": 1,
+    "order_seed": EXECUTION_SEED,
 }
 OLLAMA_RESPONSE_FIELDS = (
     "prompt_eval_count",

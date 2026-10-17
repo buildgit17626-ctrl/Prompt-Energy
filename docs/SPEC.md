@@ -3,7 +3,7 @@
 Working title: **Prompt design and the cost of a correct answer: tokens, estimated energy and verified yield in small-model code generation**
 
 ## 1. Research question
-How do common prompt design choices (instruction style, few-shot examples, reasoning requests, output-length constraints, prompt compression) change token use, latency, estimated energy and task success for small open-weight code models running locally, and what is the energy cost per *correct* solution?
+How do common prompt design choices (instruction style, few-shot examples, reasoning requests, output-length constraints, instruction verbosity) change token use, latency, estimated energy and task success for small open-weight code models running locally, and what is the energy cost per *correct* solution?
 
 ## 2. What is already known (read first; this is a replication-plus-extension)
 Earlier work reports that inference energy is driven mainly by output length and response time, that targeted prompt phrases which shorten outputs can cut energy while preserving quality, and that prompt characteristics themselves show weak association with energy. Our contribution is deliberately modest:
@@ -17,7 +17,7 @@ Do not claim novelty beyond this.
 - **H2:** Concise-output prompts reduce tokens and energy with little loss in pass rate on easy tasks, but may lower pass rate on harder tasks.
 - **H3:** Few-shot examples raise input tokens and may raise pass rate; the net effect on energy per correct solution depends on whether it removes failures.
 - **H4:** Step-by-step reasoning prompts raise tokens and energy substantially; benefits concentrate on harder tasks, so energy per correct solution may be worse overall.
-- **H5 (optional):** Compressing the prompt reduces energy less than its token reduction suggests.
+- **H5:** Longer instructions with the same demand raise prompt-processing cost but change total energy little because output length dominates. Compare the long code-only P5 instruction with the shorter code-only P1 instruction. P2 records tokens and timings; energy is assessed only in later milestones.
 Report results against each hypothesis, including negative results.
 
 ## 4. Scope
@@ -27,7 +27,7 @@ Report results against each hypothesis, including negative results.
 - API models: out of scope for energy (it cannot be measured). Optional token-count-only comparison, clearly labelled as such.
 
 ## 5. Protocol
-- **Prompt variants (pre-registered):** P0 minimal baseline; P1 "return only code"; P2 "explain, then code"; P3 few-shot with 1 and 3 examples; P4 step-by-step reasoning then code; P5 compressed (shortened) instructions.
+- **Prompt variants (pre-registered):** P0 minimal baseline; P1 "return only code"; P2 "explain, then code"; P3 few-shot with 1 and 3 examples; P4 step-by-step reasoning then code; P5 long code-only instructions. Exact wording and assembly are in `docs/PROMPTS.md` and config.
 - **Decoding:** deterministic (temperature 0 or fixed seeds), fixed `max_new_tokens`, identical stop rules.
 - **Correctness:** extract code, run unit tests in a restricted sandbox (see AGENTS.md safety rules), record pass or fail, timeouts and extraction failures separately.
 - **Repeats:** 3 repeats per (model, prompt, task) to estimate measurement noise.
@@ -47,6 +47,15 @@ Report results against each hypothesis, including negative results.
 - Few-shot examples must be original and not duplicate or specialize any selected task. The semantic audit is in `docs/FEW_SHOT_REVIEW.md`. The initial add-seven example was replaced before any inference because it specialized HumanEval/53.
 
 ## 6. Results schema (one row per generation)
+### P2 registration, awaiting final owner review before model calls
+
+- Fixed decoding: temperature 0, seed 1729, num_thread=8, num_ctx=4096, num_predict=768, num_gpu=0, no custom stop strings. Seven arms and 40-task population are unchanged.
+- Exact P5: "Please read the following Python function signature and docstring carefully. Complete the function so that it satisfies the docstring and handles edge cases correctly. Return only the code for the completed function, with no explanation."
+- Select the last complete python/py/unlabelled fenced block that parses and defines the required top-level function; otherwise use the whole stripped response. Prepend everything in the trusted task prompt before its target function, including imports/helpers, before sandbox checks and execution. No reference body is supplied. Validate the new path on all 40 reference solutions.
+- Determinism compares text, prompt_eval_count and prompt_eval_duration on two identical requests. Proposed conservative operational cache signal: either count or duration decreases on the second request (a duration decrease is not proof of cache reuse). If either model signals reuse, use keep_alive=0 for all scored runs; otherwise -1. Persist the decision before the smoke run and reuse it on resume. Invalid probe fields stop the run. Unload/verify absence of probe and warm-up models before the first scored call when zero is selected; record load_duration separately for every request.
+- The 1.5b smoke run covers task IDs 0, 1, 11, 13, 14 across seven arms once (35 scored rows). Calibration/warm-up/determinism outputs are labelled and excluded from scored rows but retained in raw JSONL. Energy columns and difficulty_group remain empty.
+
+### Scored row columns
 `run_id, timestamp, model, model_hash, prompt_id, task_id, difficulty_group, repeat, seed, input_tokens, output_tokens, wall_seconds, tokens_per_second, cpu_pkg_energy_wh, codecarbon_wh, idle_baseline_w, co2e_kg, passed, failure_type, raw_output_path, python, runtime_version, codecarbon, cpu_model, os, power_mode`
 
 ## 7. Analysis plan (the owner writes this)
