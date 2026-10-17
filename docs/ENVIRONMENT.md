@@ -33,20 +33,24 @@
 
 ## Power settings: observations versus run protocol
 
+- Latest recheck on 2026-10-17, after the owner's update: **Best performance
+  and AC connected confirmed**. GetSystemPowerStatus returned ACLineStatus=1;
+  PowerGetEffectiveOverlayScheme returned success (0) and
+  ded574b5-45a0-4f42-8737-46345c09c238. The Balanced base scheme below remains
+  active; it is distinct from the Best performance overlay. This supersedes
+  the earlier battery/power-saving observation, retained below as history.
 - `powercfg /getactivescheme`: Balanced,
   GUID 381b4222-f694-41f0-9685-ff5bb260df2e.
-- 2026-10-17: `GetSystemPowerStatus` succeeded and returned **ACLineStatus=0
+- Earlier on 2026-10-17: `GetSystemPowerStatus` succeeded and returned **ACLineStatus=0
   (on battery)**. The earlier 2026-10-16 check reported ACLineStatus=1; the new
   observation supersedes it for this revision.
-- `PowerGetEffectiveOverlayScheme` succeeded (return code 0), reporting
+- In that earlier check, `PowerGetEffectiveOverlayScheme` succeeded (return code 0), reporting
   **961cc777-2547-4f9d-8174-7d86181b8a7a**, Microsoft's power-saving / Better Battery
   overlay. This is **not Best performance**. The Settings UI was not inspected.
   Best performance corresponds to ded574b5-45a0-4f42-8737-46345c09c238.
   No system settings were changed by the harness.
-- Owner's intended run setting: **Best performance, plugged in**. It is a
-  pre-run requirement, not the current observed state. P1 correctness tests
-  can run on battery; do not start measured batches until the owner sets the
-  requested mode and a fresh check confirms AC and the effective overlay.
+- Owner's required run setting: **Best performance, plugged in**, now verified.
+  Recheck before each measured batch because power state can change.
 - HWiNFO CPU Package Power availability: recorded in SPEC as owner-confirmed;
   logging was not started or independently verified during P1.
 - Thread count, cooldown and fixed output-token cap will be registered in P2/P3
