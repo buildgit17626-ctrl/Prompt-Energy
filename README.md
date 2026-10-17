@@ -34,3 +34,17 @@ fail closed instead of running code with weaker limits.
 
 See docs/ENVIRONMENT.md for observed power settings, docs/REFERENCES.md for
 licences, and docs/learning/P1.md for the walkthrough and assumptions.
+
+## See the restrictions in action
+
+From the repository root:
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.sandbox_demo
+```
+
+With `.venv313` activated, use `python -m experiments.sandbox_demo`.
+Expected outcomes: correct -> passed; wrong -> failed; import os -> rejected;
+infinite loop -> timeout; memory hog -> memory_limit. The command exits nonzero
+if any outcome differs. It uses the same five-second/256-MiB limits as the tests,
+executes only authored snippets in workers, and writes no model outputs.

@@ -111,3 +111,12 @@ OLLAMA_RESPONSE_FIELDS = (
     "prompt_eval_duration",
     "eval_duration",
 )
+
+# Authored safety demonstrations, never included in the research task population.
+SANDBOX_DEMO_CASES = (
+    ("correct", "def answer():\n    return 42", "passed"),
+    ("wrong", "def answer():\n    return 0", "failed"),
+    ("import_os", "import os\ndef answer():\n    return 42", "rejected"),
+    ("infinite_loop", "def answer():\n    while True: pass", "timeout"),
+    ("memory_hog", "def answer():\n    return [0] * (10**9)", "memory_limit"),
+)
