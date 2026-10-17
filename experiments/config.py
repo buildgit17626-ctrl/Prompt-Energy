@@ -56,7 +56,10 @@ REPEATS = 3
 
 # Authored for this study; no benchmark reference solutions are demonstrations.
 FEW_SHOT_EXAMPLES = (
-    ('def add_seven(n):\n    """Return n plus seven."""', "def add_seven(n):\n    return n + 7"),
+    (
+        'def lookup_status(statuses, key):\n    """Look up key; return unknown if absent."""',
+        'def lookup_status(statuses, key):\n    return statuses.get(key, "unknown")',
+    ),
     (
         'def wrap_label(text):\n    """Put text between square brackets."""',
         'def wrap_label(text):\n    return "[" + text + "]"',
@@ -87,6 +90,8 @@ SANDBOX = {
     "memory_mb": 256,
     "poll_seconds": 0.01,
     "max_source_bytes": 100_000,
+    "cleanup_timeout_seconds": 2.0,
+    "cleanup_poll_seconds": 0.05,
 }
 # Future contract only: P2 must register num_predict and thread count before runs.
 OLLAMA = {

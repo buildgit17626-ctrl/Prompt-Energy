@@ -4,6 +4,7 @@ from dataclasses import asdict
 
 import pytest
 
+from experiments.config import FEW_SHOT_EXAMPLES
 from prompt_energy.sandbox import STATUSES, run_solution
 from prompt_energy.tasks import Task, load_tasks
 
@@ -106,7 +107,7 @@ def test_minimal_environment_and_temp_cleanup(monkeypatch, runaway):
     monkeypatch.setenv("STUDY_SECRET", "must-not-reach-child")
     monkeypatch.setattr(sandbox.subprocess, "Popen", inspect)
     body = "while True: pass" if runaway else "return 1"
-    result = run_solution(SIMPLE, f"def answer():\n    {body}", timeout_seconds=1)
+    result = run_solution(SIMPLE, f"def answer():\n    {body}", timeout_seconds=1 if runaway else 5)
     assert result.status == ("timeout" if runaway else "passed")
     assert observed["process"].poll() is not None
     assert "STUDY_SECRET" not in observed["env"]
@@ -144,3 +145,42 @@ def test_random_seed_is_repeatable():
     source = "import random\ndef answer():\n    return random.randint(0, 1000000)"
     assert run_solution(task, source).passed
     assert run_solution(task, source).passed
+
+
+@pytest.mark.parametrize("operation", ["socket.socket()", "socket.getaddrinfo('localhost', 80)"])
+def test_network_operations_denied_even_from_trusted_checks(operation):
+    # Deliberately bypass the candidate import policy to test the independent
+    # audit layer, without opening a connection or relying on an external host.
+    checks = (
+        "import socket\ndef check(candidate):\n"
+        "    try:\n"
+        f"        {operation}\n"
+        "    except PermissionError as error:\n"
+        "        assert str(error) == 'network_access_denied'\n"
+        "    else:\n"
+        "        raise AssertionError('network operation was allowed')\n"
+        "    assert candidate() == 1\n"
+    )
+    task = Task("network_probe", "", "", checks, "answer")
+    result = run_solution(task, "def answer():\n    return 1")
+    assert result.passed, asdict(result)
+
+
+@pytest.mark.parametrize(
+    "index,entry,checks",
+    [
+        (
+            0,
+            "lookup_status",
+            "assert candidate({'a': 'ready'}, 'a') == 'ready'\n"
+            "assert candidate({}, 'a') == 'unknown'",
+        ),
+        (1, "wrap_label", "assert candidate('hi') == '[hi]'\nassert candidate('') == '[]'"),
+        (2, "count_tabs", "assert candidate('a\\tb\\t') == 2\nassert candidate(' ') == 0"),
+    ],
+)
+def test_original_demonstrations_pass(index, entry, checks):
+    test = "def check(candidate):\n" + "\n".join("    " + line for line in checks.splitlines())
+    task = Task("original_demo", "", "", test, entry)
+    result = run_solution(task, FEW_SHOT_EXAMPLES[index][1])
+    assert result.passed, asdict(result)

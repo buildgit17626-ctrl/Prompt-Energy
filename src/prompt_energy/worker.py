@@ -6,6 +6,7 @@ import importlib
 import json
 import operator
 import random
+import runpy
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -70,11 +71,21 @@ def arithmetic_only(expression: str) -> int | float:
     return visit(tree.body)
 
 
+def deny_network(event: str, args: tuple) -> None:
+    """Deny audited socket/DNS operations before any candidate code runs.
+
+    This is a second Python-level layer, not an OS firewall or VM boundary.
+    """
+    if event.startswith("socket."):
+        raise PermissionError("network_access_denied")
+
+
 def main() -> int:
     """Execute only after the parent installs OS limits and sends the gate byte."""
     if sys.stdin.buffer.read(1) != b"G":
         return 2
     payload = json.loads(Path("input.json").read_text(encoding="utf-8"))
+    sys.addaudithook(deny_network)
     random.seed(payload["seed"])
     modules = {
         name: SimpleNamespace(
@@ -101,11 +112,12 @@ def main() -> int:
     candidate_scope = {"__builtins__": safe_builtins, "__name__": "candidate"}
     outcome = {"status": "runtime_error", "reason": "unknown"}
     try:
-        exec(compile(payload["source"], "<candidate>", "exec"), candidate_scope)
+        # Standard script loading occurs only in this resource-limited worker.
+        # The harness never calls eval/exec on candidate text.
+        candidate_scope = runpy.run_path("candidate.py", init_globals=candidate_scope)
         candidate = candidate_scope[payload["entry_point"]]
         # Trusted benchmark tests cannot be overwritten by candidate definitions.
-        test_scope = {"__builtins__": builtins.__dict__}
-        exec(compile(payload["test"], "<tests>", "exec"), test_scope)
+        test_scope = runpy.run_path("checks.py")
         test_scope["check"](candidate)
         outcome = {"status": "passed", "reason": ""}
     except MemoryError:

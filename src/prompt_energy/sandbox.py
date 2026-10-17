@@ -7,6 +7,8 @@ import subprocess
 import sys
 import tempfile
 import time
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -41,6 +43,25 @@ class TestResult:
         return self.status == "passed"
 
 
+@contextmanager
+def _temporary_directory() -> Iterator[str]:
+    temporary = tempfile.TemporaryDirectory(prefix="prompt-energy-")
+    try:
+        yield temporary.name
+    finally:
+        # Windows can briefly retain file locks after a worker has been reaped.
+        # Retry only our own generated temp directory; never hide permanent errors.
+        deadline = time.monotonic() + SANDBOX["cleanup_timeout_seconds"]
+        while True:
+            try:
+                temporary.cleanup()
+                break
+            except PermissionError:
+                if time.monotonic() >= deadline:
+                    raise
+                time.sleep(SANDBOX["cleanup_poll_seconds"])
+
+
 def run_solution(
     task: Task,
     source: str,
@@ -67,7 +88,7 @@ def run_solution(
     process = None
     job = None
     try:
-        with tempfile.TemporaryDirectory(prefix="prompt-energy-") as directory:
+        with _temporary_directory() as directory:
             root = Path(directory)
             payload = {
                 "source": source,
@@ -76,6 +97,8 @@ def run_solution(
                 "seed": seed,
             }
             (root / "input.json").write_text(json.dumps(payload), encoding="utf-8")
+            (root / "candidate.py").write_text(source, encoding="utf-8")
+            (root / "checks.py").write_text(task.test, encoding="utf-8")
             env = {key: os.environ[key] for key in ("SystemRoot", "WINDIR") if key in os.environ}
             # -I ignores PYTHONHASHSEED; safe-path flags plus an explicit environment
             # keep imports isolated while fixing Python's hash randomization.

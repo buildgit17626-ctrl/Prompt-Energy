@@ -1,3 +1,4 @@
+import ast
 import gzip
 import hashlib
 import json
@@ -6,7 +7,14 @@ import shutil
 
 import pytest
 
-from experiments.config import MODELS, PROMPTS, TASK_COUNT, TASK_IDS, TASK_SELECTION_SEED
+from experiments.config import (
+    FEW_SHOT_EXAMPLES,
+    MODELS,
+    PROMPTS,
+    TASK_COUNT,
+    TASK_IDS,
+    TASK_SELECTION_SEED,
+)
 from prompt_energy.tasks import DATA_DIR, load_tasks
 
 
@@ -66,3 +74,39 @@ def test_malformed_records_fail(tmp_path, problem):
     (tmp_path / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     with pytest.raises(ValueError):
         load_tasks(data_dir=tmp_path)
+
+
+def test_demonstrations_do_not_duplicate_selected_functions():
+    def signature(source):
+        function = next(n for n in ast.parse(source).body if isinstance(n, ast.FunctionDef))
+        statements = [
+            n
+            for n in function.body
+            if not (
+                isinstance(n, ast.Expr)
+                and isinstance(n.value, ast.Constant)
+                and isinstance(n.value.value, str)
+            )
+        ]
+        return function.name, ast.dump(ast.Module(body=statements, type_ignores=[]))
+
+    selected = [signature(t.reference_source) for t in load_tasks()]
+    for _, solution in FEW_SHOT_EXAMPLES:
+        name, body = signature(solution)
+        assert name not in {s[0] for s in selected}
+        assert body not in {s[1] for s in selected}
+
+
+def test_allowlist_has_documented_fingerprint():
+    from prompt_energy.policy import ALLOWED_IMPORTS
+    from prompt_energy.worker import EXPORTS
+
+    assert ALLOWED_IMPORTS == EXPORTS.keys()
+    fingerprint = hashlib.sha256(
+        json.dumps(
+            {"imports": sorted(ALLOWED_IMPORTS), "exports": EXPORTS},
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
+    safety = (DATA_DIR.parent / "docs" / "SAFETY.md").read_text(encoding="utf-8")
+    assert fingerprint in safety, "Document every import/export change in SAFETY.md"

@@ -27,10 +27,44 @@ with no shared folders or credentials. Do not run this harness as Administrator.
    committed memory every 10 ms. The kernel enforces memory allocation limits
    between polls. Closing the job kills its process; the parent reaps it before
    removing the temporary directory, including on errors and timeouts.
+   Cleanup retries PermissionError for at most two seconds to accommodate
+   transient Windows locks; a persistent failure is an infrastructure error.
+   The retry never extends the candidate's execution deadline.
 6. Candidate builtins are restricted; imports return curated module facades.
    Tests run in a separate namespace so defining a candidate `check` cannot
    replace the benchmark's check. Output is discarded to the null device so
    printing cannot fill a pipe or an output file. There is no interactive stdin.
+7. Before loading candidate code, a CPython audit hook rejects every `socket.*`
+   event, including socket creation and DNS resolution. Regression tests exercise
+   actual socket/DNS calls from trusted checks to bypass the AST policy and verify
+   this independent layer. This is Python-level network denial, not an OS firewall.
+8. The harness does not directly call eval/exec on candidate text. Candidate and
+   test scripts are written to the temporary directory and loaded by `runpy.run_path`
+   only inside the worker, with the restricted candidate builtins preserved.
+   Standard Python script loading internally executes bytecode; runpy itself is
+   not a security boundary. The numeric arithmetic interpreter remains unchanged.
+
+## Allowlist change log (all changes must be recorded here)
+
+- 2026-10-16, initial implementation: typing, math, itertools, functools,
+  collections, heapq, bisect, re, string, random, copy, fractions, decimal,
+  statistics and operator, exposing only the computation members listed in
+  worker.py. No filesystem, process, network or native-interface module allowed.
+- 2026-10-16, reference compatibility: added hashlib with md5, sha1, sha224,
+  sha256, sha384, sha512, blake2b and blake2s. HumanEval/162 needs md5. No
+  file_digest or file-reading interface added. All 40 references subsequently passed.
+- 2026-10-16, related syntax/builtin compatibility (not import changes): allow
+  single-underscore local names while keeping dunder names/private attributes
+  blocked; replace eval with the arithmetic-only interpreter for HumanEval/160.
+- 2026-10-17, Python 3.13 revision: no import or exported-member additions/removals.
+  Added socket audit denial and standard script loading in the worker. Reference
+  revalidation is recorded in learning/P1.md; no benchmark records were changed.
+
+Current allowlist fingerprint (sorted JSON of imports and EXPORTS, UTF-8 SHA-256):
+`8388d07cdc1d87bb3bfa3a36b145b4dff79b4a3112d4fec750bd57a3a101636c`.
+A regression test requires this fingerprint in this log. Every future change
+must add a dated entry with exact members, rationale and reference-test evidence,
+then update the fingerprint; do not silently broaden the policy to hide failures.
 
 ## Compatibility and limits
 
