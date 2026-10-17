@@ -3,9 +3,9 @@ pythonpath = ["src", "."]
 testpaths = ["tests"]
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py313"
 line-length = 100
-exclude = [".python311", ".venv", "data"]
+exclude = [".python311", ".venv", ".venv313", "data"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

@@ -24,14 +24,19 @@ Checked 2026-10-16. No benchmark records or reference solutions were altered.
 ## Software
 
 Official project documentation for citations and licence notices:
-[Python](https://docs.python.org/3.11/),
+[Python](https://docs.python.org/3.13/),
 [NumPy](https://numpy.org/doc/), [pandas](https://pandas.pydata.org/docs/),
-[scikit-learn](https://scikit-learn.org/stable/), [OpenML](https://docs.openml.org/),
+[psutil](https://psutil.readthedocs.io/),
 [CodeCarbon](https://mlco2.github.io/codecarbon/),
 [Matplotlib](https://matplotlib.org/stable/), [SciPy](https://docs.scipy.org/doc/scipy/),
 [pytest](https://docs.pytest.org/), [Ruff](https://docs.astral.sh/ruff/).
-The fixed stack is retained as requested, even though the P1 harness itself uses
-only Python's standard library. No LightGBM or new runtime dependency was added.
+The current stack follows the 2026-10-17 AGENTS revision; OpenML and scikit-learn
+are no longer dependencies. The P1 harness itself uses only Python's standard
+library. Exact versions are recorded in requirements.txt and requirements-lock.txt.
+Python 3.13 Windows installation is verified from the official PyPI wheels.
+
+Runtime controls: [CPython audit hooks](https://docs.python.org/3.13/library/sys.html#sys.addaudithook)
+and [runpy](https://docs.python.org/3.13/library/runpy.html). Neither is an OS sandbox.
 
 Windows resource control uses
 [Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects).

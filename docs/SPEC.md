@@ -21,6 +21,7 @@ Do not claim novelty beyond this.
 Report results against each hypothesis, including negative results.
 
 ## 4. Scope
+- Environment: Python 3.13 (64-bit), per the owner's 2026-10-17 update; validated exact patch version is recorded in `docs/ENVIRONMENT.md`.
 - Local inference only. Open-weight models of roughly 0.5B to 3B parameters that run on a laptop (exact choices fixed in `config.py`, with licences checked).
 - Tasks: 30 to 60 short Python programming tasks with unit tests, from a permissively licensed benchmark subset (for example HumanEval or MBPP, after checking licences), split into easy and harder groups by a baseline pass rate. Note possible training-data contamination as a limitation.
 - API models: out of scope for energy (it cannot be measured). Optional token-count-only comparison, clearly labelled as such.
@@ -31,7 +32,7 @@ Report results against each hypothesis, including negative results.
 - **Correctness:** extract code, run unit tests in a restricted sandbox (see AGENTS.md safety rules), record pass or fail, timeouts and extraction failures separately.
 - **Repeats:** 3 repeats per (model, prompt, task) to estimate measurement noise.
 - **Measurement:** Primary: **CPU Package Power** logged by HWiNFO (confirmed available on the owner's Intel i5-13420H laptop) to CSV at a 1-second interval and integrated over each generation window. The runner records start and end timestamps on the same clock, and an idle baseline measured for 60 seconds before each batch is subtracted. Secondary: CodeCarbon (offline mode), which on Windows estimates power from CPU load and an assumed power rating, so report it only as a cross-check. Also record tokens in, tokens out, wall time and tokens per second. CPU package power excludes memory, display, storage and the rest of the laptop, so say so clearly and treat results as relative comparisons on one machine. Flag any generation shorter than about 3 seconds as low resolution. If a plug-in wall power meter is available, calibrate on a small subset and report it.
-- **Machine rules:** plugged in, same power mode, close other heavy apps, fixed thread count, cool-down gaps between batches.
+- **Machine rules:** plugged in, Windows Power mode set by the owner to Best performance, close other heavy apps, fixed thread count, cool-down gaps between batches. Record actual observed power mode and AC state; do not replace observations with the intended setting.
 - **Scale check:** with 40 tasks, 7 prompt conditions (P3 has one- and three-example arms), 2 models and 3 repeats there are 1,680 generations. Estimate run time in milestone P3; ask the owner before changing tasks or repeats.
 
 ### P1 registration (2026-10-16)
@@ -39,10 +40,11 @@ Report results against each hypothesis, including negative results.
 - HumanEval is MIT licensed. Use the unchanged archive at revision `6d43fb980f9fee3c892a914eda09951f772ad10d`, SHA-256 recorded in `data/manifest.json`; retain its licence notice.
 - Sample 40 IDs without replacement from the numeric population 0..163 with `random.Random(1729)`, then sort numerically. Explicit IDs are in `experiments/config.py`. No task is replaced after reference checks.
 - Prompt wording and three original synthetic examples are in config. P3_1 uses the first example; P3_3 uses all three in the recorded order. Actual prompt assembly and code extraction remain P2.
-- The Windows test runner uses a five-second deadline, 256 MiB commit-memory cap, one-process Job Object, curated computation imports/builtins, fresh temp directory and a minimal environment. Python hash and random seeds are 1729. See `docs/SAFETY.md` for exact restrictions and the absence of an OS security boundary.
+- The Windows test runner uses a five-second deadline, 256 MiB commit-memory cap, one-process Job Object, curated computation imports/builtins, socket/DNS audit denial, fresh temp directory and a minimal environment. Candidate script loading occurs only in the worker. Python hash and random seeds are 1729. Cleanup retries transient Windows locks for up to two seconds after reaping; persistent cleanup errors are logged as infrastructure failures. See `docs/SAFETY.md` for exact restrictions and the absence of an OS security boundary.
 - HumanEval/160 uses eval in its original reference. The runner substitutes a numeric arithmetic AST interpreter for that builtin, equally for references and model solutions, without changing benchmark records. Policy rejection remains distinct from incorrectness.
 - P2 runtime contract: local Ollama `/api/generate`, temperature 0, fixed seed 1729, one fixed `num_predict` output-token cap and identical stop rules. Register the cap and thread count before generation; P1 does not choose them through test performance. Read `prompt_eval_count`, `eval_count`, `total_duration`, `load_duration`, `prompt_eval_duration`, and `eval_duration` from responses; duration fields are nanoseconds. Do not estimate token counts from text. Persist raw response fields, local model digest and Ollama version. CPU-only execution is intended.
-- Easy/harder grouping is not assigned during P1. Its baseline protocol and threshold require a research-design decision before later use. Do not infer groups from reference-solution checks.
+- Owner-decided difficulty rule (2026-10-17): group each task by whether `qwen2.5-coder:1.5b` passes with prompt P0 in a calibration run. Fix the calibration settings and resulting grouping in config before the main run. Exclude P0 from group-wise comparisons to avoid defining and assessing its performance on the same grouping criterion. Add a sensitivity grouping by reference solution length. Record this rule only in P1: no grouping code, calibration, labels or length threshold yet. Calibration generations are additional to the approximately 1,680 main-run generations.
+- Few-shot examples must be original and not duplicate or specialize any selected task. The semantic audit is in `docs/FEW_SHOT_REVIEW.md`. The initial add-seven example was replaced before any inference because it specialized HumanEval/53.
 
 ## 6. Results schema (one row per generation)
 `run_id, timestamp, model, model_hash, prompt_id, task_id, difficulty_group, repeat, seed, input_tokens, output_tokens, wall_seconds, tokens_per_second, cpu_pkg_energy_wh, codecarbon_wh, idle_baseline_w, co2e_kg, passed, failure_type, raw_output_path, python, runtime_version, codecarbon, cpu_model, os, power_mode`
@@ -51,7 +53,7 @@ Report results against each hypothesis, including negative results.
 1. Per model and prompt: mean and 95% bootstrap interval for input tokens, output tokens, energy and pass rate.
 2. Energy per correct solution; Pareto plot of pass rate versus energy.
 3. Regression of energy on output tokens and on input tokens (H1); report R squared and residuals.
-4. Breakdown by difficulty group (H2, H4).
+4. Breakdown by the owner-decided calibration group (H2, H4), excluding P0 from group-wise comparisons; sensitivity grouping by reference solution length. No grouping is implemented in P1.
 5. Measurement noise from repeats; check whether conclusions hold when the noisiest runs are removed.
 6. Limitations: estimated energy, one machine, small models, small task set, benchmark contamination.
 Avoid strong significance claims; use descriptive statistics and bootstrap intervals.
