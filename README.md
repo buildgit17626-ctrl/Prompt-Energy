@@ -87,3 +87,17 @@ If the runner reports an uncertain in-flight request or damaged journal, preserv
 the directory and investigate. It intentionally does not regenerate or edit raw
 data. A network timeout logs a failed row and stops because the server might
 still be working. Read docs/learning/P2.md for the walkthrough and evidence.
+
+## Inspect a saved answer (no generation or execution)
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.show_run smoke-026
+```
+
+With the study environment activated, use `python -m experiments.show_run smoke-026`.
+The viewer prints the saved system/user prompts, raw response text, extracted
+code, prelude, combined source, saved test result and benchmark checks. It does
+not rerun code or modify files. Use `--output <batch-folder>` for another folder.
+It warns if current extraction/task/config files differ from the saved hashes.
+Read docs/P2_SMOKE_REVIEW.md for the four failure explanations and two passing
+verbose examples. Smoke rows are excluded from research analysis.
