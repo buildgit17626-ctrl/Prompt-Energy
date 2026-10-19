@@ -27,7 +27,7 @@ class CarbonMeter:
             output_handlers=[],
             allow_multiple_runs=False,
             log_level="error",
-            pue=1,
+            pue=1.0,
         )
         self.active = None
 

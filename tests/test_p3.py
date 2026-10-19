@@ -300,6 +300,7 @@ def test_carbon_adapter_is_offline_machine_mode_and_keeps_native_data():
     assert meter.tracker.kwargs["tracking_mode"] == "machine"
     assert not meter.tracker.kwargs["save_to_api"]
     assert not meter.tracker.kwargs["save_to_logfire"]
+    assert type(meter.tracker.kwargs["pue"]) is float
     meter.start()
     meter.begin("a")
     result = meter.end()
