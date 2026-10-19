@@ -162,6 +162,75 @@ OLLAMA_RESPONSE_FIELDS = (
     "eval_duration",
 )
 
+# Prospective P3 registration: implementation approved, pilot NOT approved.
+P3_PILOT = {
+    "task_selection_seed": 1729,
+    "order_seed": 1729,
+    "task_ids": tuple(
+        f"HumanEval/{i}"
+        for i in (
+            0,
+            11,
+            13,
+            14,
+            29,
+            46,
+            53,
+            55,
+            76,
+            90,
+            92,
+            94,
+            105,
+            117,
+            122,
+            128,
+            133,
+            140,
+            143,
+            160,
+        )
+    ),
+    "prompt_ids": ("P0", "P1", "P2", "P4"),
+    "models": MODELS,
+    "repeats": 2,
+    "keep_alive": 0,
+    "owner_approval_required": True,
+    "include_in_main_analysis": False,
+    "expected_runtime_version": "0.40.6",
+    "expected_model_digests": {
+        "qwen2.5-coder:0.5b": "4ff64a7f502a08b7616edb8ca0a79eb1853fc363d842b7df4b46915d11a3fb09",
+        "qwen2.5-coder:1.5b": "d7372fd828518a4d38b1eb196c673c31a85f2ed302b3d1e406c4c2d1b64a0668",
+    },
+}
+ENERGY = {
+    "tool": "HWiNFO",
+    "mode": "CPU Package Power sensor; trapezoidal; idle-adjusted",
+    "sensor_column": "CPU Package Power [W]",
+    "poll_seconds": 0.5,
+    "cadence_relative_tolerance": 0.2,
+    "max_sample_gap_seconds": 1.0,
+    "low_resolution_seconds": 3.0,
+    "baseline_seconds": 60.0,
+    "gap_seconds": 5.0,
+    "growth_check_seconds": 3.0,
+    "freshness_seconds": 3.0,
+    "coverage_wait_seconds": 10.0,
+    "phase_tolerance_seconds": 0.1,
+    "phase_tolerance_fraction": 0.05,
+    "primary_window": "post_load",
+    "windows": ("total", "post_load", "prompt_eval", "decode"),
+    "negative_adjusted_energy": "retain_and_flag",
+    "utc_offset_minutes": 330,
+    "smoke_excluded": True,
+}
+CODECARBON = {
+    "country_iso_code": "IND",
+    "tracking_mode": "machine",
+    "measure_power_secs": 1.0,
+    "mode": "offline machine estimate; whole-request envelope; secondary",
+}
+
 # Authored safety demonstrations, never included in the research task population.
 SANDBOX_DEMO_CASES = (
     ("correct", "def answer():\n    return 42", "passed"),

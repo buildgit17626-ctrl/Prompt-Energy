@@ -31,7 +31,7 @@ Report results against each hypothesis, including negative results.
 - **Decoding:** deterministic (temperature 0 or fixed seeds), fixed `max_new_tokens`, identical stop rules.
 - **Correctness:** extract code, run unit tests in a restricted sandbox (see AGENTS.md safety rules), record pass or fail, timeouts and extraction failures separately.
 - **Repeats:** 3 repeats per (model, prompt, task) to estimate measurement noise.
-- **Measurement:** Primary: **CPU Package Power** logged by HWiNFO (confirmed available on the owner's Intel i5-13420H laptop) to CSV at a 1-second interval and integrated over each generation window. The runner records start and end timestamps on the same clock, and an idle baseline measured for 60 seconds before each batch is subtracted. Secondary: CodeCarbon (offline mode), which on Windows estimates power from CPU load and an assumed power rating, so report it only as a cross-check. Also record tokens in, tokens out, wall time and tokens per second. CPU package power excludes memory, display, storage and the rest of the laptop, so say so clearly and treat results as relative comparisons on one machine. Flag any generation shorter than about 3 seconds as low resolution. If a plug-in wall power meter is available, calibrate on a small subset and report it.
+- **Measurement:** Primary: **CPU Package Power** logged by HWiNFO (confirmed available on the owner's Intel i5-13420H laptop) to CSV at a 500 ms interval and integrated over each generation window. The runner records start and end timestamps on the same clock, and an idle baseline measured for 60 seconds before each batch is subtracted. Secondary: CodeCarbon (offline mode), which may use hardware power estimates/fallback assumptions on Windows, so report it only as a cross-check. Also record tokens in, tokens out, wall time and tokens per second. CPU package power excludes memory, display, storage and the rest of the laptop, so say so clearly and treat results as relative comparisons on one machine. Flag any generation shorter than about 3 seconds as low resolution. If a plug-in wall power meter is available, calibrate on a small subset and report it.
 - **Machine rules:** plugged in, Windows Power mode set by the owner to Best performance, close other heavy apps, fixed thread count, cool-down gaps between batches. Record actual observed power mode and AC state; do not replace observations with the intended setting.
 - **Scale check:** with 40 tasks, 7 prompt conditions (P3 has one- and three-example arms), 2 models and 3 repeats there are 1,680 generations. Estimate run time in milestone P3; ask the owner before changing tasks or repeats.
 
@@ -63,7 +63,7 @@ Report results against each hypothesis, including negative results.
   abs(D-(L+P+G)) > max(0.1 seconds, 0.05*D). This is a timing consistency flag,
   not evidence of precise boundaries. Also flag invalid/out-of-request windows,
   missing/nonfinite/negative durations, missing sensor coverage, and windows
-  shorter than about 3 seconds at the registered 1-second sensor interval.
+  shorter than about 3 seconds at the registered 500 ms sensor interval.
   Do not silently clip boundaries, repair durations or drop flagged rows.
 - Report load_duration distributions by model and prompt, with counts and
   uncertainty/dispersion, so loading overhead remains visible. Subtract the
@@ -72,7 +72,7 @@ Report results against each hypothesis, including negative results.
   CodeCarbon measurements from whole-request estimates.
 - These are prospective P3 decisions only. Implement the windows, flags and
   explicit output columns in the P3 plan/config/schema change before any pilot;
-  P2's executable registration and accepted raw/result files remain unchanged.
+  accepted P2 raw/result files remain unchanged. P3 extends executable fingerprints; resuming an old P2 batch requires its original commit.
 
 Duration-field definitions: [Ollama generation API](https://docs.ollama.com/api/generate).
 
@@ -104,6 +104,72 @@ Duration-field definitions: [Ollama generation API](https://docs.ollama.com/api/
 ### Scored row columns
 `run_id, timestamp, model, model_hash, prompt_id, task_id, difficulty_group, repeat, seed, input_tokens, output_tokens, wall_seconds, tokens_per_second, cpu_pkg_energy_wh, codecarbon_wh, idle_baseline_w, co2e_kg, passed, failure_type, raw_output_path, python, runtime_version, codecarbon, cpu_model, os, power_mode`
 
+### P3 pilot registration (2026-10-19; owner approval pending)
+
+The pilot selects 20 of the existing 40 tasks with random.Random(1729), sorted
+numerically: 0, 11, 13, 14, 29, 46, 53, 55, 76, 90, 92, 94, 105, 117, 122, 128,
+133, 140, 143, 160. Cross P0/P1/P2/P4 with both models and two repeats, then shuffle
+with seed 1729: **320 requests**. Pilot rows are diagnostic and excluded from the
+main analysis. Prompts, extraction and decoding remain unchanged. keep_alive=0
+applies to every scored request. Config fixes the accepted P2 Ollama version and
+model digests; mismatches stop execution. No pilot starts without owner approval.
+
+HWiNFO must log CPU Package Power in watts at 500 ms. Explicit CSV encoding,
+delimiter, decimal separator, date/time formats, UTC offset and sensor column
+are recorded; ambiguous headers require an explicit column index. Do not guess
+dates, sort timestamps or repair bad readings. Preflight checks observed AC/Best
+performance, Python 3.13 64-bit, log growth and advancing timestamps over 3 s,
+freshness within 3 s and recent median cadence within 20% of 500 ms.
+
+Each process session, including a resumed session with remaining requests,
+warms/unloads both models, waits 5 s, then collects a 60 s quiet baseline.
+Baseline watts are time-weighted trapezoidal energy divided by duration.
+A minimum 5 s gap follows previous testing/unload before the next scored call.
+Integration interpolates window boundaries between samples, never extrapolates.
+Subtract baseline watts times window seconds / 3600 independently for each
+window. Retain and flag negative adjusted values. Gaps exceeding 1 s invalidate
+the affected energy estimate; windows shorter than 3 s are low resolution.
+Invalid/missing estimates remain empty with flags, never silently dropped.
+
+Total, primary post-load and approximate phase windows and the approved mismatch
+tolerance follow the owner decisions above. UTC/monotonic discrepancy is also
+flagged at max(0.1 s, 5% wall time). Preserve the signed API phase residual and
+wall time minus API total. Sensor polling does not guarantee internal sensor
+refresh frequency or accurate sub-second phase energy.
+
+CodeCarbon 3.0.4 uses offline machine mode, country IND, one-second sampling,
+no external reporting, and named baseline/request tasks. Preserve its native
+record and actual task envelope duration. Subtract its own idle rate over its
+own envelope; do not substitute HWiNFO idle watts or allocate CodeCarbon energy
+to phases. It is a secondary CPU/RAM hardware estimate, not measured wall power;
+Windows fallbacks can make it insensitive to workload. Check native observations
+and runtime diagnostics during the approved pilot before interpreting it.
+
+Persist request intents, exact raw responses and original answer rows unchanged.
+Append baselines.jsonl and measurements.jsonl. Copy the live CSV to an append-only
+per-session mirror in sensors/; record each used byte-prefix length and SHA-256.
+The original sensor file is never modified. Resume reuses saved responses; an
+uncertain request is never retried automatically. Completed resume makes no API
+calls. Missing sensor/secondary measurements retain the answer and stop new work
+for inspection. Sensor capture waits at most 10 s for a trailing boundary sample.
+
+P3 energy.csv is a derived join: the original 26 scored columns followed by
+`record_kind, include_in_main_analysis, energy_tool, energy_mode, primary_window,
+cpu_pkg_total_raw_wh, cpu_pkg_total_wh, cpu_pkg_post_load_raw_wh,
+cpu_pkg_prompt_eval_wh, cpu_pkg_decode_wh, energy_flags, load_seconds,
+phase_residual_seconds, wall_minus_api_seconds, baseline_id, codecarbon_tool_mode,
+codecarbon_raw_wh, codecarbon_idle_w, codecarbon_seconds`.
+Here cpu_pkg_energy_wh is primary adjusted post-load energy; codecarbon_wh and
+co2e_kg are secondary, independently baseline-adjusted whole-envelope estimates.
+Raw phase energy and boundaries remain in measurements.jsonl. Empty CSV fields
+mean unavailable, not zero. All rows carry pilot/main-analysis exclusion labels.
+
+energy-summary.json reports load count/mean/sample SD/min/max/missing by model
+and prompt, paired-repeat primary energy spread and flagged/missing counts.
+The full-run time proxy is 1,680 times mean(request wall time + 5 s), plus 60 s.
+It excludes test, warm-up, control and sensor-wait overhead and extrapolates only
+four arms; it is not a promised runtime. No hypothesis analysis is implemented.
+
 ## 7. Analysis plan (the owner writes this)
 1. Per model and prompt: mean and 95% bootstrap interval for input tokens, output tokens, energy and pass rate.
 2. Energy per correct solution; Pareto plot of pass rate versus energy.
@@ -124,7 +190,7 @@ Avoid strong significance claims; use descriptive statistics and bootstrap inter
 
 **P3: Energy tracking.**
 - CodeCarbon integration, idle baseline subtraction, repeats, machine metadata, run-time estimate for the full run.
-- *Accept:* energy columns filled; a noise script reports spread across repeats; the measurement mode is stated in outputs.
+- *Accept:* owner-approved 320-request pilot completes; energy columns filled or explicitly flagged missing; the report command gives spread across repeats and load summaries; measurement modes are stated. Offline tests alone do not complete live acceptance.
 
 **P4: Full run and analysis scripts.**
 - Resumable full run (skips completed rows), analysis scripts for section 7 producing CSV and PNG.
