@@ -1,0 +1,163 @@
+{
+  "original_logs_unchanged": true,
+  "runs": [
+    {
+      "run_id": "smoke-015",
+      "task_id": "HumanEval/1",
+      "prompt_id": "P4",
+      "saved_status": "failed",
+      "replay": {
+        "status": "failed",
+        "reason": "assertion_failed",
+        "wall_seconds": 0.17490100000577513,
+        "peak_memory_bytes": 9973760,
+        "seed": 1729
+      },
+      "without_added_prelude": {
+        "status": "failed",
+        "reason": "assertion_failed",
+        "wall_seconds": 0.17559630000323523,
+        "peak_memory_bytes": 10170368,
+        "seed": 1729
+      },
+      "extracted_sha256": "7d383e8fac2fd096a2e5cb57e591ad1e8e4b0a05edfe86f108f3e5f7e1ad3916",
+      "wrong_output_witness_check": "def check(candidate):\n    assert candidate('(())') == ['(()', ')']",
+      "wrong_output_witness_result": {
+        "status": "passed",
+        "reason": "",
+        "wall_seconds": 0.19997210000292398,
+        "peak_memory_bytes": 9949184,
+        "seed": 1729
+      }
+    },
+    {
+      "run_id": "smoke-023",
+      "task_id": "HumanEval/14",
+      "prompt_id": "P4",
+      "saved_status": "failed",
+      "replay": {
+        "status": "failed",
+        "reason": "assertion_failed",
+        "wall_seconds": 0.14550929999677464,
+        "peak_memory_bytes": 10170368,
+        "seed": 1729
+      },
+      "without_added_prelude": {
+        "status": "failed",
+        "reason": "assertion_failed",
+        "wall_seconds": 0.1957428999885451,
+        "peak_memory_bytes": 9977856,
+        "seed": 1729
+      },
+      "extracted_sha256": "843a4621e589cfab7a13bb44648c4a9ff684db2f5fa0ec67c05af02b4daef94b",
+      "wrong_output_witness_check": "def check(candidate):\n    assert candidate('') == ['']",
+      "wrong_output_witness_result": {
+        "status": "passed",
+        "reason": "",
+        "wall_seconds": 0.20603170001413673,
+        "peak_memory_bytes": 10190848,
+        "seed": 1729
+      }
+    },
+    {
+      "run_id": "smoke-025",
+      "task_id": "HumanEval/11",
+      "prompt_id": "P2",
+      "saved_status": "failed",
+      "replay": {
+        "status": "failed",
+        "reason": "assertion_failed",
+        "wall_seconds": 0.1448182000021916,
+        "peak_memory_bytes": 10059776,
+        "seed": 1729
+      },
+      "without_added_prelude": {
+        "status": "failed",
+        "reason": "assertion_failed",
+        "wall_seconds": 0.17657570001028944,
+        "peak_memory_bytes": 9998336,
+        "seed": 1729
+      },
+      "extracted_sha256": "ec94db5a8a2953df31a81b38ef25b8086ec54839184cc7322e38ba95114701af",
+      "wrong_output_witness_check": "def check(candidate):\n    assert candidate('0101','0000') == '101'",
+      "wrong_output_witness_result": {
+        "status": "passed",
+        "reason": "",
+        "wall_seconds": 0.1746421999996528,
+        "peak_memory_bytes": 9908224,
+        "seed": 1729
+      }
+    },
+    {
+      "run_id": "smoke-026",
+      "task_id": "HumanEval/1",
+      "prompt_id": "P2",
+      "saved_status": "failed",
+      "replay": {
+        "status": "failed",
+        "reason": "assertion_failed",
+        "wall_seconds": 0.17601599999761675,
+        "peak_memory_bytes": 9957376,
+        "seed": 1729
+      },
+      "without_added_prelude": {
+        "status": "failed",
+        "reason": "assertion_failed",
+        "wall_seconds": 0.18457800000032876,
+        "peak_memory_bytes": 9777152,
+        "seed": 1729
+      },
+      "extracted_sha256": "063252900ad1396a709f5f0446fde4b15d085e7afa5e7ffe3cf266cf7a5dbb04",
+      "wrong_output_witness_check": "def check(candidate):\n    assert candidate('()()') == ['()()']",
+      "wrong_output_witness_result": {
+        "status": "passed",
+        "reason": "",
+        "wall_seconds": 0.17483160000119824,
+        "peak_memory_bytes": 9781248,
+        "seed": 1729
+      }
+    },
+    {
+      "run_id": "smoke-001",
+      "task_id": "HumanEval/11",
+      "prompt_id": "P4",
+      "saved_status": "passed",
+      "replay": {
+        "status": "passed",
+        "reason": "",
+        "wall_seconds": 0.14466729998821393,
+        "peak_memory_bytes": 9932800,
+        "seed": 1729
+      },
+      "without_added_prelude": {
+        "status": "passed",
+        "reason": "",
+        "wall_seconds": 0.19594399999186862,
+        "peak_memory_bytes": 9818112,
+        "seed": 1729
+      },
+      "extracted_sha256": "5d03be11c99b202ccec893de1e6e08dd7090519fb2af2ded1ff71ebf884ed90b"
+    },
+    {
+      "run_id": "smoke-009",
+      "task_id": "HumanEval/13",
+      "prompt_id": "P2",
+      "saved_status": "passed",
+      "replay": {
+        "status": "passed",
+        "reason": "",
+        "wall_seconds": 0.14472070000192616,
+        "peak_memory_bytes": 9793536,
+        "seed": 1729
+      },
+      "without_added_prelude": {
+        "status": "passed",
+        "reason": "",
+        "wall_seconds": 0.18524540000362322,
+        "peak_memory_bytes": 9764864,
+        "seed": 1729
+      },
+      "extracted_sha256": "f88211797afcbf6dd1c66c960881a3bbc78959b7ebaa3640c223db930a5b83ea"
+    }
+  ]
+}

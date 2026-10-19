@@ -35,6 +35,47 @@ Report results against each hypothesis, including negative results.
 - **Machine rules:** plugged in, Windows Power mode set by the owner to Best performance, close other heavy apps, fixed thread count, cool-down gaps between batches. Record actual observed power mode and AC state; do not replace observations with the intended setting.
 - **Scale check:** with 40 tasks, 7 prompt conditions (P3 has one- and three-example arms), 2 models and 3 repeats there are 1,680 generations. Estimate run time in milestone P3; ask the owner before changing tasks or repeats.
 
+### Owner decisions before P3 (2026-10-19; measurement not started)
+
+- **Exclude all P2 smoke rows from research analysis.** The 35 smoke rows are
+  harness validation only, not part of the 1,680 main-run generations. Descriptive
+  smoke summaries are labelled as such and do not test the hypotheses. Warm-up,
+  determinism and calibration records also stay outside the main analysis.
+- With scored keep_alive=0, report two baseline-adjusted CPU package energy
+  estimates from the HWiNFO log: **total request energy** over [request_start,
+  response_end], including model loading; and **estimated post-load energy**
+  over [request_start + load_duration/1e9, response_end]. The owner selects the
+  latter as the prospective **primary** measure; total request energy remains
+  available alongside it. Keep the raw power readings and timings unchanged.
+- API durations are aggregate measurements, not synchronized phase timestamps.
+  Anchoring load to the client request start assumes negligible queue/transport
+  offset. Therefore the post-load window is an approximate proxy, not a directly
+  observed loading boundary or proof that all loading energy has been removed.
+  Report client wall time minus API total_duration separately. Retain overhead;
+  do not distribute it among phases or force their times to add up.
+- The optional **approximate phase split** uses seconds L=load_duration/1e9,
+  P=prompt_eval_duration/1e9, G=eval_duration/1e9 and D=total_duration/1e9.
+  Prompt processing is placed at [request_start+L, request_start+L+P]; decoding
+  at [request_start+L+P, request_start+L+P+G]. These are duration-aligned proxies,
+  not independent direct measurements of input/output energy. Always label them
+  approximate and preserve the signed residual D-(L+P+G).
+- **Owner-approved tolerance:** flag a phase-sum mismatch when
+  abs(D-(L+P+G)) > max(0.1 seconds, 0.05*D). This is a timing consistency flag,
+  not evidence of precise boundaries. Also flag invalid/out-of-request windows,
+  missing/nonfinite/negative durations, missing sensor coverage, and windows
+  shorter than about 3 seconds at the registered 1-second sensor interval.
+  Do not silently clip boundaries, repair durations or drop flagged rows.
+- Report load_duration distributions by model and prompt, with counts and
+  uncertainty/dispersion, so loading overhead remains visible. Subtract the
+  measured idle baseline over the duration of each reported window separately.
+  CodeCarbon remains a secondary cross-check; do not invent phase-specific
+  CodeCarbon measurements from whole-request estimates.
+- These are prospective P3 decisions only. Implement the windows, flags and
+  explicit output columns in the P3 plan/config/schema change before any pilot;
+  P2's executable registration and accepted raw/result files remain unchanged.
+
+Duration-field definitions: [Ollama generation API](https://docs.ollama.com/api/generate).
+
 ### P1 registration (2026-10-16)
 - Models: `qwen2.5-coder:0.5b` and `qwen2.5-coder:1.5b` in Ollama; both exact tag pages list Apache 2.0. Record local digests in P2 because tags can change.
 - HumanEval is MIT licensed. Use the unchanged archive at revision `6d43fb980f9fee3c892a914eda09951f772ad10d`, SHA-256 recorded in `data/manifest.json`; retain its licence notice.
