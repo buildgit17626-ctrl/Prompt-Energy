@@ -1,4 +1,4 @@
-"""Study registration. P2 revisions await owner review before any model call."""
+"""Study registration. Owner authorized proceeding with P2 on 2026-10-19."""
 
 MODELS = ("qwen2.5-coder:0.5b", "qwen2.5-coder:1.5b")
 MODEL_LICENSES = dict.fromkeys(MODELS, "Apache-2.0")
@@ -69,7 +69,7 @@ FEW_SHOT_EXAMPLES = (
         'def count_tabs(text):\n    return text.count("\\t")',
     ),
 )
-# P3_1 and P3_3 are distinct conditions. P2 will implement the prompt builder.
+# P3_1 and P3_3 are distinct conditions in the exact prompt builder.
 PROMPTS = {
     "P0": {"instruction": "Complete the Python function.", "examples": 0},
     "P1": {"instruction": "Complete the Python function. Return only code.", "examples": 0},
@@ -152,6 +152,7 @@ P2_SMOKE = {
     "repeats": 1,
     "order_seed": EXECUTION_SEED,
 }
+P2_CONTROL = {"unload_timeout_seconds": 10.0, "unload_poll_seconds": 0.1}
 OLLAMA_RESPONSE_FIELDS = (
     "prompt_eval_count",
     "eval_count",

@@ -1,7 +1,7 @@
-# P2 exact prompts — awaiting owner review
+# P2 exact prompts — owner reviewed; proceed authorized 2026-10-19
 
-No generation is authorized by this document alone. Review these texts together
-with docs/plans/P2.md before warm-up, smoke or determinism calls. The seven arm
+The owner reviewed these texts and subsequently authorized proceeding with P2.
+This permits warm-up, smoke and determinism calls, not a full study run. The seven arm
 instructions preserve the accepted wording except P5, replaced by the owner's
 long instruction before any generation. Demonstrations are unchanged.
 
@@ -136,11 +136,11 @@ target starts at its first decorator. Then pass the combined source to the P1
 sandbox, including its syntax/import checks. No reference body is added. The
 same path is tested on all 40 reference solutions before model calls.
 
-## Determinism, prompt caching and residency (for owner review)
+## Determinism, prompt caching and residency
 
 Compare exact response text, prompt_eval_count and prompt_eval_duration on two
 identical requests. Preserve all three observations, even when text differs.
-The probe uses keep_alive=-1. Proposed conservative cache signal in config:
+The probe uses keep_alive=-1. Registered conservative cache signal in config:
 **a decrease in either prompt_eval_count or prompt_eval_duration on request two**.
 A shorter duration alone may be noise; it is not proof of reuse. The policy
 deliberately prefers unloading when reuse is possible rather than claiming a
@@ -152,4 +152,4 @@ generation request alone unloads after that request and would not by itself
 prevent the first request from reusing already resident state. Record each call's
 load_duration separately. If neither signals reuse, retain -1. Invalid/missing
 probe fields stop scored generation. Persist the resolved policy before the smoke
-run and retain it on resume. No probe or model call has been performed yet.
+run and retain it on resume. Observed outcomes will be recorded in learning/P2.md.
