@@ -51,3 +51,15 @@ the installed 0.40.6 responses also include prompt_eval_cached_count. Preserve
 that field with all raw fields; the already registered cache decision remains
 based on the paired prompt count/duration comparison. The installed models'
 licence text and exact templates are retained in the local P2 manifest.
+
+
+## P3 measurement implementation
+
+- HWiNFO sensor logging: https://www.hwinfo.com/ and official Date/Time CSV
+  discussion https://www.hwinfo.com/forum/threads/what-is-the-time-column-in-the-csv-log-it-doesnt-match-my-system-time.7059/ .
+  HWiNFO is separately installed proprietary software; no binary is redistributed.
+  Record the owner's installed version and use it under its applicable licence.
+- CodeCarbon API and methodology: https://mlco2.github.io/codecarbon/api.html and
+  https://mlco2.github.io/codecarbon/methodology.html . Implementation targets the
+  pinned 3.0.4 API verified against installed source; current online docs may differ.
+  Offline machine-mode estimates are secondary to CPU Package Power integration.

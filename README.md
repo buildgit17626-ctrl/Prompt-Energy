@@ -101,3 +101,53 @@ not rerun code or modify files. Use `--output <batch-folder>` for another folder
 It warns if current extraction/task/config files differ from the saved hashes.
 Read docs/P2_SMOKE_REVIEW.md for the four failure explanations and two passing
 verbose examples. Smoke rows are excluded from research analysis.
+
+
+## P3: prepare and review, pilot not yet approved
+
+The 320-request pilot is implemented but has **not been run**. Read
+[the P3 plan](docs/plans/P3.md), [registered protocol](docs/SPEC.md) and
+[learning note](docs/learning/P3.md) first.
+
+Safe offline preparation (no model or tracker calls):
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.run_p3 prepare
+.\.venv313\Scripts\python.exe -m experiments.show_run smoke-026
+```
+
+Start HWiNFO sensor CSV logging at **500 ms**. While plugged in with Best
+performance, run this read-only preflight, replacing the example path:
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.run_p3 preflight --hwinfo-log 'C:\path\sensors.csv'
+```
+
+Defaults: UTF-8 with optional BOM, comma delimiter, decimal dot, Date format
+`%d.%m.%Y`, Time `%H:%M:%S.%f`, UTC+05:30, exact column `CPU Package Power [W]`.
+Use `--help` to specify actual encoding, delimiter, decimal, date/time format,
+timezone or header. Duplicate sensor headers require `--power-index` (zero-based
+CSV column). These settings are recorded; the parser never guesses dates.
+Retain the original CSV and record the installed HWiNFO version.
+
+**Only after owner approval**, the live command is:
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.run_p3 pilot --owner-approved --hwinfo-log 'C:\path\sensors.csv' --hwinfo-version 'ACTUAL_VERSION'
+```
+
+Use the same output folder, version and format options to resume. Every new
+session with pending requests obtains a new baseline. An uncertain in-flight
+request stops for investigation instead of automatic regeneration. Keep raw
+logs and sensor files; back them up after the approved pilot.
+
+The offline report can be rebuilt with:
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.run_p3 report --output results/p3-pilot
+```
+
+It writes derived energy.csv and energy-summary.json with load summaries, repeat
+spread, flags and a qualified runtime proxy. Smoke data is rejected. Pilot data
+is labelled excluded from main analysis. Primary HWiNFO energy is estimated
+post-load CPU package energy; CodeCarbon is a separate whole-request estimate.
