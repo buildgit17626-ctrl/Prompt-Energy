@@ -107,3 +107,13 @@ allocation refusal, import/introspection rejection, namespace separation,
 arithmetic-only evaluation, cleanup, environment filtering and fail-closed setup.
 
 Reference: [Microsoft Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects).
+# P2 inference boundary (2026-10-19)
+
+The parent harness sends registered prompts only to a literal loopback Ollama
+HTTP address; it does not follow redirects or use environment proxy settings.
+Returned text is saved as data before parsing/extraction. It never triggers
+shell commands, installs or filesystem operations suggested by the model.
+Code extraction prepends only the benchmark task's trusted prelude and then
+uses the existing P1 subprocess policy and limits. The import allowlist and
+its documented limitations are unchanged. Inference HTTP happens in the parent;
+candidate workers retain their existing Python-level socket/DNS denial.

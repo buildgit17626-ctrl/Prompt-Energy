@@ -344,3 +344,75 @@ def test_cache_policy_records_text_difference_and_reuse(tmp_path):
     calls = len(client.calls)
     assert runner.resolve_cache(journal, tasks)["keep_alive"] == 0
     assert len(client.calls) == calls
+
+
+@pytest.mark.parametrize(
+    ("count", "duration", "expected"),
+    [
+        (31, 500_000_000, -1),
+        (31, 499_999_999, 0),
+        (0, 500_000_001, 0),
+    ],
+)
+def test_cache_branches_and_nonidentical_text_are_reported(tmp_path, count, duration, expected):
+    class ProbeClient(FakeClient):
+        def exchange(self, path, payload=None):
+            raw = super().exchange(path, payload)
+            if payload and "prompt" in payload:
+                key = (payload["model"], payload["prompt"])
+                second = self.repetitions[key] == 2
+                value = response(
+                    "different" if second else "first",
+                    prompt_eval_count=count if second else 31,
+                    prompt_eval_duration=duration if second else 500_000_000,
+                )
+                return envelope(value, path, payload)
+            return raw
+
+    journal = runner.Journal(tmp_path, ProbeClient(), "session")
+    tasks = {task.task_id: task for task in runner.load_tasks()}
+    policy = runner.resolve_cache(journal, tasks)
+    assert policy["keep_alive"] == expected
+    assert not any(row["text_identical"] for row in policy["observations"])
+
+
+def test_registration_drift_blocks_resume_without_calls(tmp_path, monkeypatch):
+    client = FakeClient()
+    runner.run_smoke(tmp_path, client)
+    before = len(client.calls)
+    monkeypatch.setattr(runner, "registration", lambda: {"changed": "source"})
+    with pytest.raises(ValueError, match="Registration changed"):
+        runner.run_smoke(tmp_path, client)
+    assert len(client.calls) == before
+
+
+def test_duplicate_raw_and_result_records_are_rejected(tmp_path):
+    client = FakeClient()
+    runner.run_smoke(tmp_path, client)
+    result = read_jsonl(tmp_path / "results.jsonl")[0]
+    append_json(tmp_path / "results.jsonl", result)
+    with pytest.raises(ValueError, match="Duplicate result"):
+        result_index(tmp_path)
+    raw = read_jsonl(tmp_path / "raw.jsonl")[0]
+    append_json(tmp_path / "raw.jsonl", raw)
+    with pytest.raises(ValueError, match="Duplicate/orphan raw"):
+        runner.Journal(tmp_path, client, "new-session")
+
+
+@pytest.mark.parametrize(
+    ("error", "status", "failure"),
+    [
+        ({"type": "timeout", "detail": "fixture"}, None, "timeout"),
+        ({"type": "transport_error", "detail": "fixture"}, None, "transport_error"),
+        (None, 500, "api_error"),
+    ],
+)
+def test_failed_api_attempts_keep_rows_without_fabricated_counts(error, status, failure):
+    metadata = host_metadata()
+    manifest = {"runtime": {"version": "fixture", "models": {"m": {"digest": "hash"}}}}
+    job = {"run_id": "id", "model": "m", "task_id": "fixture", "prompt_id": "P0", "repeat": 1}
+    raw = envelope({}, session="s", error=error, http_status=status)
+    record = runner.make_result(job, raw, manifest, TASK, metadata)
+    assert record["row"]["failure_type"] == failure
+    assert record["row"]["input_tokens"] == record["row"]["output_tokens"] == ""
+    assert not record["row"]["passed"] and record["reason"]

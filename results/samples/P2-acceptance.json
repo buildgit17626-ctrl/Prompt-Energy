@@ -1,0 +1,30 @@
+{
+  "scored_rows": 35,
+  "outcomes": {
+    "passed": 31,
+    "test_failed": 4
+  },
+  "raw_kinds": {
+    "control": 152,
+    "warmup": 2,
+    "determinism": 4,
+    "scored": 35
+  },
+  "all_api_counts_rates_and_prompts_match": true,
+  "all_scored_cached_prompt_counts_zero": true,
+  "energy_and_difficulty_empty": true,
+  "resume": {
+    "completed": 35,
+    "new_requests": 0
+  },
+  "journals_and_csv_unchanged_on_resume": true,
+  "file_sha256": {
+    "cache_policy.json": "93cb5a80f495b02e8d9d260f8cf7cbbb07aa45afa2c34a0ce712816012bab332",
+    "manifest.json": "5f92808ada63a9889795ba5760bff5d9aa6a3eb8287feacae34aeadfe06b9c04",
+    "raw.jsonl": "70029c6f58aa79c3d08765035d59eb395efd1a0b5c9812b402a9f66f8a73f5d4",
+    "requests.jsonl": "eb708197b4bb6863b3c46aeae43fa93eb22057fc120be8e71aaf22d1604f8644",
+    "results.jsonl": "14b3592b56fa4567c40baf0f7c70724a8db09ba177be67e3b6d3592aa9bba03c",
+    "sessions.jsonl": "f3340f6505184f10e9f30117d0d5b37ff426b88b7c2149ed593a7e3be2fb2a9c",
+    "results.csv": "696581a357aa2a080d59d6dd447bfc46479e329e4028543b1bcb9e69278b390b"
+  }
+}

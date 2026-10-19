@@ -42,3 +42,12 @@ Windows resource control uses
 [Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects).
 Broader background-reading verification belongs to later milestones; this file
 does not claim that all papers named in SPEC have been reviewed.
+
+P2 API documentation rechecked 2026-10-19:
+[Generate](https://docs.ollama.com/api/generate),
+[running models](https://docs.ollama.com/api/ps).
+The generation API documents native token counts and nanosecond durations;
+the installed 0.40.6 responses also include prompt_eval_cached_count. Preserve
+that field with all raw fields; the already registered cache decision remains
+based on the paired prompt count/duration comparison. The installed models'
+licence text and exact templates are retained in the local P2 manifest.

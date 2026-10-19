@@ -67,3 +67,26 @@ from Windows Settings > System > Power & battery. Record machine metadata,
 versions, date and actual power settings with each later results file.
 
 Overlay GUID reference: [Microsoft power slider documentation](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/customize-power-slider).
+
+## P2 live session, 2026-10-19 (Asia/Kolkata)
+
+Observed before the P2 smoke: Python 3.13.7, 64-bit; Windows-11-10.0.26300-SP0;
+13th Gen Intel(R) Core(TM) i5-13420H; physical RAM 16,786,780,160 bytes.
+GetSystemPowerStatus returned ACLineStatus=1 and the effective overlay API
+returned success with ded574b5-45a0-4f42-8737-46345c09c238: Best performance.
+No system settings were changed. Session metadata is recorded alongside raw data.
+
+Ollama 0.40.6, local API at 127.0.0.1:11434. Installed model metadata:
+
+| Model | Quantization | Local digest |
+| --- | --- | --- |
+| qwen2.5-coder:0.5b | Q4_K_M | 4ff64a7f502a08b7616edb8ca0a79eb1853fc363d842b7df4b46915d11a3fb09 |
+| qwen2.5-coder:1.5b | Q4_K_M | d7372fd828518a4d38b1eb196c673c31a85f2ed302b3d1e406c4c2d1b64a0668 |
+
+The manifest retains each exact runtime template, parameters, model details and
+licence text. Both installed licence texts include Apache 2.0. Version pins are
+unchanged from P1. Fixed requested inference options: CPU-only num_gpu=0,
+num_thread=8, num_ctx=4096, num_predict=768, seed=1729, temperature=0.
+The resolved cache policy is keep_alive=0 for scored runs; each request's
+load_duration is preserved separately in its raw API body. HWiNFO and CodeCarbon
+measurement were not started. These observations are not energy measurements.
