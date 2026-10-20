@@ -1,0 +1,24 @@
+{
+  "backup": "C:\\Users\\Dhruv Brahmbhatt\\prompt-energy-backups\\p3-pilot-2026-10-20",
+  "files": 16,
+  "sha256": {
+    "p3-pilot\\.lock": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "p3-pilot\\manifest.json": "6072789c76435833adc030fec3c13e28054781c7d7b3d9f65feba95a4f002690",
+    "p3-pilot\\raw.jsonl": "d08c77955e9935a2e7c621464136328a30344545e4418f2cd65513d80f66f499",
+    "p3-pilot\\requests.jsonl": "2ea88cbe0ab3d965344491ab78fab492b9fb5fa4f06604a6376e32863e705bc7",
+    "p3-pilot\\sessions.jsonl": "4c03f133f0956477a7bb16ea877fe195fce6acab4c52696b706e8dcd3d03ae2a",
+    "p3-pilot-2026-10-20\\.lock": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "p3-pilot-2026-10-20\\baselines.jsonl": "4a5f05920ba38c9675a2e459fd4f7ac1a23d6cd07a57299b2644a1f19d6866b6",
+    "p3-pilot-2026-10-20\\energy-summary.json": "91af60caf82366745a1c6e48de6c6a396102ee2741994f0a827e9884c7e873f0",
+    "p3-pilot-2026-10-20\\energy.csv": "40547115bfe867fbf33d7e7cc821973977f21c92ed3b89f71d8f16185a323fc0",
+    "p3-pilot-2026-10-20\\manifest.json": "4023b93739bed8cfdefd6914695edf628d190858e5dfbb3acb0fbe4fce1a32d7",
+    "p3-pilot-2026-10-20\\measurements.jsonl": "af5b41fd4cb0501da295e011f6256d4ce9d967a629b1cc4688834b65fff200a8",
+    "p3-pilot-2026-10-20\\raw.jsonl": "8d927e1372e0abfbd2201806e5640449865f8ad61ebaedd5b56701976a993b99",
+    "p3-pilot-2026-10-20\\requests.jsonl": "4626f47e2511a71ebb1ae069113597d259dbfc75b8f35df02c5c42e0cd2f975d",
+    "p3-pilot-2026-10-20\\results.jsonl": "3b21943976640a4a281ca421e8bdaf2764c8ad19fb71ce4ead42425eb8880c0d",
+    "p3-pilot-2026-10-20\\sessions.jsonl": "86dfa88315ccdf3e7a84be1789ffc6508ce02ec29aab1873c2767d14686d5f3c",
+    "p3-pilot-2026-10-20\\sensors\\3a14a331ffe64cb3882af3df4e14ff2a.csv": "4aa5145280dcf60ccbdf0288803c5b2a51ae215497529f9e5e105002db01810e"
+  },
+  "verified_identical": true,
+  "separate_physical_device": false
+}

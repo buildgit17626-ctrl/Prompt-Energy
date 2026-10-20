@@ -1,0 +1,24 @@
+{
+  "rows": 320,
+  "outcomes": {
+    "passed": 206,
+    "no_code": 2,
+    "test_failed": 98,
+    "truncated": 10,
+    "timeout": 4
+  },
+  "missing_primary": 1,
+  "flags": {
+    "decode:low_resolution": 46,
+    "post_load:low_resolution": 34,
+    "prompt_eval:low_resolution": 320,
+    "codecarbon_negative_adjusted": 5,
+    "decode:sensor_gap": 1,
+    "post_load:sensor_gap": 1,
+    "total:sensor_gap": 1,
+    "total:low_resolution": 7
+  },
+  "first": "2026-10-19T18:44:15.280910+00:00",
+  "last": "2026-10-19T20:29:35.090372+00:00",
+  "sensor_prefixes_verified": 320
+}

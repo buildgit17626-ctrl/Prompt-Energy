@@ -103,9 +103,10 @@ Read docs/P2_SMOKE_REVIEW.md for the four failure explanations and two passing
 verbose examples. Smoke rows are excluded from research analysis.
 
 
-## P3: prepare and review, pilot not yet approved
+## P3: pilot completed; commands for reproduction
 
-The 320-request pilot is implemented but has **not been run**. Read
+The owner-approved 320-request pilot completed on 2026-10-20. See
+[the pilot audit](docs/P3_PILOT_REVIEW.md). Read
 [the P3 plan](docs/plans/P3.md), [registered protocol](docs/SPEC.md) and
 [learning note](docs/learning/P3.md) first.
 
@@ -151,3 +152,14 @@ It writes derived energy.csv and energy-summary.json with load summaries, repeat
 spread, flags and a qualified runtime proxy. Smoke data is rejected. Pilot data
 is labelled excluded from main analysis. Primary HWiNFO energy is estimated
 post-load CPU package energy; CodeCarbon is a separate whole-request estimate.
+
+
+The accepted pilot output folder is `results/p3-pilot-2026-10-20` (git-ignored).
+Its recorded parser option is `--encoding cp1252`, and HWiNFO version is
+`8.54-6090`. Report-only access requires no model requests:
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.run_p3 report --output results/p3-pilot-2026-10-20
+```
+
+No full run (P4) has been started or authorized by completing this pilot.

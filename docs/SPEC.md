@@ -104,7 +104,7 @@ Duration-field definitions: [Ollama generation API](https://docs.ollama.com/api/
 ### Scored row columns
 `run_id, timestamp, model, model_hash, prompt_id, task_id, difficulty_group, repeat, seed, input_tokens, output_tokens, wall_seconds, tokens_per_second, cpu_pkg_energy_wh, codecarbon_wh, idle_baseline_w, co2e_kg, passed, failure_type, raw_output_path, python, runtime_version, codecarbon, cpu_model, os, power_mode`
 
-### P3 pilot registration (2026-10-19; owner approval pending)
+### P3 pilot registration (2026-10-19; owner approved 2026-10-20)
 
 The pilot selects 20 of the existing 40 tasks with random.Random(1729), sorted
 numerically: 0, 11, 13, 14, 29, 46, 53, 55, 76, 90, 92, 94, 105, 117, 122, 128,
@@ -218,3 +218,14 @@ Avoid strong significance claims; use descriptive statistics and bootstrap inter
 
 ## 11. How this extends (for pitches)
 With more resources: GPU measurements with real power meters, larger models, other task types, and a link to the owner's studies on LLM-generated problem validity and solvability (energy and token cost per verified problem).
+
+
+## P3 execution audit (2026-10-20)
+
+Owner-approved pilot completed 320/320 requests using the registered settings.
+No-op resume made zero requests. Primary estimates exist for 319 rows; the
+remaining row is retained with a sensor-gap flag. All prompt-eval windows are
+low resolution; CodeCarbon native power was constant across requests, so it
+cannot corroborate workload-dependent energy differences. See
+`docs/P3_PILOT_REVIEW.md`. These observations do not change the pre-registered
+protocol, exclusions or thresholds. P4 has not been started.

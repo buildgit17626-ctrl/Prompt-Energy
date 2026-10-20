@@ -90,3 +90,27 @@ num_thread=8, num_ctx=4096, num_predict=768, seed=1729, temperature=0.
 The resolved cache policy is keep_alive=0 for scored runs; each request's
 load_duration is preserved separately in its raw API body. HWiNFO and CodeCarbon
 measurement were not started. These observations are not energy measurements.
+
+
+## P3 live pilot, 2026-10-20 (Asia/Kolkata)
+
+HWiNFO64 version 8.54-6090 was read from the owner's screenshot. Source CSV:
+`C:\Users\Dhruv Brahmbhatt\OneDrive\Documents\Experiments\OllamaDataset.CSV`.
+Observed cp1252 encoding, comma separator, decimal dot, Date `%d.%m.%Y`,
+Time `%H:%M:%S.%f`, UTC+05:30, CPU Package Power [W]. Preflight confirmed append
+only growth, fresh readings and approximately 501 ms median polling. The owner
+set 500 ms polling and direct disk logging. One scored window had a gap >1 s;
+its affected energy estimates remain missing with flags.
+
+Session metadata confirmed Python 3.13.7 64-bit, Windows build 26300,
+i5-13420H and 16,786,780,160 RAM bytes, ACLineStatus=1, Best performance.
+The runner rechecked AC/mode before each scored request. Ollama 0.40.6 and both
+model digests matched P2; all scored requests used keep_alive=0 and reported
+zero cached prompt tokens. Scored requests ran from 00:14:15 to 01:59:35 IST.
+
+The 60-second HWiNFO idle baseline was 15.4201366935 W. CodeCarbon 3.0.4 offline
+IND machine mode used a separate 60.0163-second baseline; native CPU power was
+42.5 W and RAM power 10 W both at baseline and throughout all scored requests.
+Its nearly constant hardware estimate is not a useful workload-sensitive
+cross-check. The full native observations are retained. No claim of measured
+whole-laptop power or accurate per-phase energy follows from these logs.
