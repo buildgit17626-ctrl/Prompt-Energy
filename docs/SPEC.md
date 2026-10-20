@@ -31,7 +31,7 @@ Report results against each hypothesis, including negative results.
 - **Decoding:** deterministic (temperature 0 or fixed seeds), fixed `max_new_tokens`, identical stop rules.
 - **Correctness:** extract code, run unit tests in a restricted sandbox (see AGENTS.md safety rules), record pass or fail, timeouts and extraction failures separately.
 - **Repeats:** 3 repeats per (model, prompt, task) to estimate measurement noise.
-- **Measurement:** Primary: **CPU Package Power** logged by HWiNFO (confirmed available on the owner's Intel i5-13420H laptop) to CSV at a 500 ms interval and integrated over each generation window. The runner records start and end timestamps on the same clock, and an idle baseline measured for 60 seconds before each batch is subtracted. Secondary: CodeCarbon (offline mode), which may use hardware power estimates/fallback assumptions on Windows, so report it only as a cross-check. Also record tokens in, tokens out, wall time and tokens per second. CPU package power excludes memory, display, storage and the rest of the laptop, so say so clearly and treat results as relative comparisons on one machine. Flag any generation shorter than about 3 seconds as low resolution. If a plug-in wall power meter is available, calibrate on a small subset and report it.
+- **Measurement:** Primary: **CPU Package Power** logged by HWiNFO (confirmed available on the owner's Intel i5-13420H laptop) to CSV at a 500 ms interval and integrated over each generation window. The runner records start and end timestamps on the same clock, and an idle baseline measured for 60 seconds before each batch is subtracted. CodeCarbon was tested in P3 and is disabled for the prospective full run after the owner's 2026-10-20 amendment below. Also record tokens in, tokens out, wall time and tokens per second. CPU package power excludes memory, display, storage and the rest of the laptop, so say so clearly and treat results as relative comparisons on one machine. Flag any generation shorter than about 3 seconds as low resolution. If a plug-in wall power meter is available, calibrate on a small subset and report it.
 - **Machine rules:** plugged in, Windows Power mode set by the owner to Best performance, close other heavy apps, fixed thread count, cool-down gaps between batches. Record actual observed power mode and AC state; do not replace observations with the intended setting.
 - **Scale check:** with 40 tasks, 7 prompt conditions (P3 has one- and three-example arms), 2 models and 3 repeats there are 1,680 generations. Estimate run time in milestone P3; ask the owner before changing tasks or repeats.
 
@@ -229,3 +229,44 @@ low resolution; CodeCarbon native power was constant across requests, so it
 cannot corroborate workload-dependent energy differences. See
 `docs/P3_PILOT_REVIEW.md`. These observations do not change the pre-registered
 protocol, exclusions or thresholds. P4 has not been started.
+
+
+## Owner amendment after P3, before any full run (2026-10-20)
+
+This prospective amendment explicitly supersedes the phase-energy and secondary
+CodeCarbon parts of the historical pilot protocol, based on pilot diagnostics.
+Keep the historical registration and raw evidence intact; do not recalculate or
+repair pilot results. FULL_RUN_MEASUREMENT in config records these decisions.
+This is not authorization to execute P4 or change prompts/tasks/repeats.
+
+- Drop prompt-versus-decode energy estimates from the full run: all 320 pilot
+  prompt windows and 46 decode windows were low resolution. API phase durations
+  and token counts may still be retained as metadata, not measured phase energy.
+- Primary measure: whole estimated post-load CPU package energy per request.
+  Report gross and baseline-adjusted net post-load energy; also retain total
+  request gross/net energy and load durations. The start+load-duration boundary
+  remains approximate. Input and output token counts are predictors, not separate
+  energy meters. H5 cannot establish input-phase energy from these data.
+- Disable CodeCarbon entirely for full-run execution. Its constant native CPU
+  42.5 W/RAM 10 W estimates cannot corroborate prompt effects. Retain old records
+  and the pinned dependency only for historical pilot reproduction. The future
+  full-run path must never construct or start its tracker.
+- Pre-register all-row reporting with all available energy (including failures
+  and low-resolution estimates), and a sensitivity analysis excluding rows with
+  post_load:low_resolution. Missing/invalid energy stays missing, never zero;
+  report denominators and flags. Correctness reporting keeps every row. Do not
+  filter by phase flags or remove negative net values. Pilot illustration uses
+  319 available energies; sensitivity uses 285 after excluding 34 short windows.
+- Owner declined the new two-minute idle check. The pilot baseline remains
+  15.4201366935 W; the earlier ~6.5 W figure lacks a supplied comparable source.
+  Do not attribute the difference to power mode without evidence. Future batches
+  still require their registered 60-second idle baseline. Gross/net reporting
+  makes the dependence on baseline subtraction visible.
+- The owner's current screenshot shows 10.864 W current CPU Package Power and
+  13.643 W displayed average, but no controlled quiet-window provenance. It is
+  contextual evidence, not a replacement baseline.
+
+The requested pilot scatterplots and repeat comparisons are diagnostic only,
+not hypothesis tests. They do not authorize dropping tasks or tuning prompts.
+Changing config updates source fingerprints; historical resume requires the
+original pilot commit 38f9c15 (or 87d1f46, with identical executable sources).

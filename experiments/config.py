@@ -231,6 +231,26 @@ CODECARBON = {
     "mode": "offline machine estimate; whole-request envelope; secondary",
 }
 
+# Owner amendment after the diagnostic pilot; not permission to start P4.
+# Historical ENERGY/CODECARBON settings above reproduce the P3 experiment.
+FULL_RUN_MEASUREMENT = {
+    "registered_on": "2026-10-20",
+    "tool": "HWiNFO",
+    "codecarbon_enabled": False,
+    "phase_energy_enabled": False,
+    "windows": ("total", "post_load"),
+    "primary_window": "post_load",
+    "report_gross_and_net": True,
+    "predictors": ("output_tokens", "input_tokens"),
+    "energy_analysis_sets": ("all_available", "exclude_primary_low_resolution"),
+    "sensitivity_excluded_flag": "post_load:low_resolution",
+    "missing_energy": "retain_row_no_imputation_report_denominator",
+    "include_failed_answers": True,
+    "pilot_excluded": True,
+    "idle_recheck": "owner_skipped_2026-10-20",
+    "full_run_authorized": False,
+}
+
 # Authored safety demonstrations, never included in the research task population.
 SANDBOX_DEMO_CASES = (
     ("correct", "def answer():\n    return 42", "passed"),
