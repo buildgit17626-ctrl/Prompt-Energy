@@ -1,0 +1,20 @@
+{
+  "source": "C:\\Users\\Dhruv Brahmbhatt\\prompt-energy-study\\results\\p3-pilot-2026-10-20",
+  "destination": "C:\\Users\\Dhruv Brahmbhatt\\OneDrive\\Documents\\Experiments\\Prompt-Energy-backups\\p3-pilot-2026-10-20",
+  "files": 11,
+  "sha256": {
+    ".lock": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "baselines.jsonl": "4a5f05920ba38c9675a2e459fd4f7ac1a23d6cd07a57299b2644a1f19d6866b6",
+    "energy-summary.json": "91af60caf82366745a1c6e48de6c6a396102ee2741994f0a827e9884c7e873f0",
+    "energy.csv": "40547115bfe867fbf33d7e7cc821973977f21c92ed3b89f71d8f16185a323fc0",
+    "manifest.json": "4023b93739bed8cfdefd6914695edf628d190858e5dfbb3acb0fbe4fce1a32d7",
+    "measurements.jsonl": "af5b41fd4cb0501da295e011f6256d4ce9d967a629b1cc4688834b65fff200a8",
+    "raw.jsonl": "8d927e1372e0abfbd2201806e5640449865f8ad61ebaedd5b56701976a993b99",
+    "requests.jsonl": "4626f47e2511a71ebb1ae069113597d259dbfc75b8f35df02c5c42e0cd2f975d",
+    "results.jsonl": "3b21943976640a4a281ca421e8bdaf2764c8ad19fb71ce4ead42425eb8880c0d",
+    "sessions.jsonl": "86dfa88315ccdf3e7a84be1789ffc6508ce02ec29aab1873c2767d14686d5f3c",
+    "sensors\\3a14a331ffe64cb3882af3df4e14ff2a.csv": "4aa5145280dcf60ccbdf0288803c5b2a51ae215497529f9e5e105002db01810e"
+  },
+  "local_copy_verified": true,
+  "cloud_upload_verified": false
+}

@@ -163,3 +163,11 @@ Its recorded parser option is `--encoding cp1252`, and HWiNFO version is
 ```
 
 No full run (P4) has been started or authorized by completing this pilot.
+
+## Post-pilot diagnostic figure
+
+Run `.\.venv313\Scripts\python.exe -m analysis.pilot_diagnostics` for the
+owner-requested diagnostic gross/net energy scatterplots and repeat comparisons.
+Read [the diagnostic note](docs/P3_DIAGNOSTICS.md). The future measurement policy
+in config disables phase energy and CodeCarbon, with a primary-resolution
+sensitivity analysis. This does not start or authorize P4.
