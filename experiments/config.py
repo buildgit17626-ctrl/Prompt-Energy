@@ -251,6 +251,33 @@ FULL_RUN_MEASUREMENT = {
     "full_run_authorized": False,
 }
 
+P4 = {
+    "subset_seed": 1729,
+    "order_seed": 1729,
+    "stage2_task_ids": tuple(
+        f"HumanEval/{i}" for i in (11, 13, 53, 55, 92, 105, 117, 122, 128, 143)
+    ),
+    "stage1_repeats": (1,),
+    "stage2_repeats": (2, 3),
+    "stop_launch_seconds": 3 * 3600,
+    "ceiling_seconds": 4 * 3600,
+    "baseline_seconds": 60,
+    "drift_absolute_w": 1.0,
+    "drift_fraction": 0.10,
+    "net_baseline": "block_start",
+    "keep_alive": 0,
+    "owner_approval_required": True,
+    "codecarbon_enabled": False,
+    "phase_energy_enabled": False,
+}
+P4_ANALYSIS = {"seed": 1729, "bootstrap_draws": 2000, "confidence": 0.95}
+P4_GROUPING = {
+    "calibration": {},
+    "calibration_rule": "1.5b P0 pass in a separately registered calibration",
+    "reference_length": {},
+    "reference_length_rule": None,
+}
+
 # Authored safety demonstrations, never included in the research task population.
 SANDBOX_DEMO_CASES = (
     ("correct", "def answer():\n    return 42", "passed"),

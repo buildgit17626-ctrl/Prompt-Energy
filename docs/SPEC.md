@@ -30,10 +30,10 @@ Report results against each hypothesis, including negative results.
 - **Prompt variants (pre-registered):** P0 minimal baseline; P1 "return only code"; P2 "explain, then code"; P3 few-shot with 1 and 3 examples; P4 step-by-step reasoning then code; P5 long code-only instructions. Exact wording and assembly are in `docs/PROMPTS.md` and config.
 - **Decoding:** deterministic (temperature 0 or fixed seeds), fixed `max_new_tokens`, identical stop rules.
 - **Correctness:** extract code, run unit tests in a restricted sandbox (see AGENTS.md safety rules), record pass or fail, timeouts and extraction failures separately.
-- **Repeats:** 3 repeats per (model, prompt, task) to estimate measurement noise.
+- **Repeats:** revised P4 two-stage design: one repeat on all 40 tasks, plus two extra repeats on a preselected 10-task subset.
 - **Measurement:** Primary: **CPU Package Power** logged by HWiNFO (confirmed available on the owner's Intel i5-13420H laptop) to CSV at a 500 ms interval and integrated over each generation window. The runner records start and end timestamps on the same clock, and an idle baseline measured for 60 seconds before each batch is subtracted. CodeCarbon was tested in P3 and is disabled for the prospective full run after the owner's 2026-10-20 amendment below. Also record tokens in, tokens out, wall time and tokens per second. CPU package power excludes memory, display, storage and the rest of the laptop, so say so clearly and treat results as relative comparisons on one machine. Flag any generation shorter than about 3 seconds as low resolution. If a plug-in wall power meter is available, calibrate on a small subset and report it.
 - **Machine rules:** plugged in, Windows Power mode set by the owner to Best performance, close other heavy apps, fixed thread count, cool-down gaps between batches. Record actual observed power mode and AC state; do not replace observations with the intended setting.
-- **Scale check:** with 40 tasks, 7 prompt conditions (P3 has one- and three-example arms), 2 models and 3 repeats there are 1,680 generations. Estimate run time in milestone P3; ask the owner before changing tasks or repeats.
+- **Scale check:** P4 has 560 stage-1 requests plus 280 stage-2 requests = 840. This supersedes the earlier 1,680-request proposal for run-time feasibility, decided from timing rather than outcomes. Historical sections below retain the original proposal for provenance.
 
 ### Owner decisions before P3 (2026-10-19; measurement not started)
 
@@ -270,3 +270,64 @@ The requested pilot scatterplots and repeat comparisons are diagnostic only,
 not hypothesis tests. They do not authorize dropping tasks or tuning prompts.
 Changing config updates source fingerprints; historical resume requires the
 original pilot commit 38f9c15 (or 87d1f46, with identical executable sources).
+
+
+## P4 registration (2026-10-20; implementation approved, live run NOT approved)
+
+P3 is accepted by the owner. Stage 1: 40 registered tasks x seven prompt arms x
+two models x repeat 1 = 560. Stage 2: 10 tasks x seven arms x two models x
+extra repeats 2 and 3 = 280. Total 840 scored requests. Reason: run-time
+feasibility based on timing, not correctness/energy outcomes. Select the subset
+using random.Random(1729).sample(existing 40 IDs,10), then numeric-sort:
+HumanEval/{11,13,53,55,92,105,117,122,128,143}. No substitutions.
+Independently shuffle each stage with seed 1729; complete stage 1 before stage 2.
+Stage-1 hypothesis scaffolds do not pool stage-2 repeats, so the subset is not
+overweighted. Noise diagnostics use repeat pairs within stage 2 separately.
+Smoke, pilot, warm-up and any calibration generations are excluded.
+
+Primary energy is whole estimated post-load CPU package energy per request,
+reported gross and net; also retain total-request gross/net. No input/output
+phase-energy attribution: all pilot prompt-eval windows were low resolution.
+CodeCarbon is not imported or started by the full-run path; old pilot evidence
+is retained and CodeCarbon is discussed only as a limitation. Native API phase
+durations may be logged for timing diagnostics, never interpreted as phase energy.
+Both all-available and primary-low-resolution-excluded analyses are required;
+missing energy is not imputed, failures stay visible, report counts explicitly.
+
+Each explicitly approved run-block invocation stops launching requests after
+3 hours, finishes the current bounded request and closes the block. A 4-hour
+safety ceiling reserves request/baseline/cleanup time before new launches.
+No automatic next block. Elapsed limits use monotonic time; OS suspension can
+cause an overrun that is flagged rather than hidden. Each block starts/ends with
+60-second idle baselines after model unload and a 5-second quiet gap. Net uses
+the starting baseline. Flag baseline drift if abs(end-start)>max(1 W,0.1*start).
+Retain signed drift. Never replace the starting baseline after seeing results.
+Missing end baselines are flagged for every affected row; interrupted blocks
+are not retroactively assigned a later idle measurement. Fresh blocks obtain
+new baselines. Existing 500 ms growth/freshness checks and hardware requirements
+remain. Failed preflight makes no model call. Failed/uncertain requests are
+never automatically regenerated. Completed resume makes zero API requests.
+
+Append-only block events, request intents, exact raw responses, answer outcomes,
+measurements and byte-preserving sensor mirrors support audit. A derived full-run
+CSV has the original scored fields except CodeCarbon/co2 fields, plus stage,
+block_id, record_kind, include_in_main_analysis, energy_tool, energy_mode,
+primary_window, cpu_pkg_total_raw_wh, cpu_pkg_total_wh,
+cpu_pkg_post_load_raw_wh, energy_flags, load_seconds, wall_minus_api_seconds,
+end_idle_baseline_w, baseline_drift_w and block_status. cpu_pkg_energy_wh is
+net post-load energy; idle_baseline_w is the starting baseline. Missing values
+are empty. Stage 2 is labelled noise-only. End-baseline flags are joined by
+block ID without modifying earlier answer/measurement journals.
+
+Analysis scaffolds: seeded task-level bootstrap (seed 1729, 2,000 draws,
+95% percentile intervals), per-model/arm mean tokens, gross/net energy and pass
+rate; ratio of total energy/tokens to number correct, with zero-correct or
+missing-energy ratios explicitly unavailable; per-model OLS with intercept and
+both input/output tokens, R2/residual plots; pass-rate/energy Pareto plots;
+stage-2 repeat spread; optional frozen calibration and reference-length maps.
+Difficulty/length-group outputs remain unavailable until owner supplies a frozen
+map and rule; P0 is excluded from all group-wise comparisons. No difficulty
+labels are inferred from scored outcomes. No statistical significance claims or
+written interpretation are generated. Report scaffold repeats limitations and
+leaves interpretation to the owner. Calibration/group definition may require a
+separate registered step; no such inference requests are part of this command.
