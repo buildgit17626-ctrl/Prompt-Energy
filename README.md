@@ -171,3 +171,85 @@ owner-requested diagnostic gross/net energy scatterplots and repeat comparisons.
 Read [the diagnostic note](docs/P3_DIAGNOSTICS.md). The future measurement policy
 in config disables phase energy and CodeCarbon, with a primary-resolution
 sensitivity analysis. This does not start or authorize P4.
+
+
+## P4 overnight guide: implementation only, full run awaits approval
+
+P3 is accepted. P4's registered schedule is 840 scored requests: 560 on all
+40 tasks once, then 280 extra repeats on the seeded 10-task subset. The change
+was made for timing feasibility, not outcome selection. Read
+[the plan](docs/plans/P4.md) and [learning note](docs/learning/P4.md).
+
+**Do not start a full run until the owner explicitly approves it.** No live P4
+requests were made during implementation. The default command is safe/offline:
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.run_p4 prepare
+```
+
+Before the approved overnight block:
+
+1. Plug in the laptop and select Windows Best performance. Set sleep/hibernate
+   on AC power to Never for the measurement period. Keep the lid open unless its
+   closing action has also been set not to sleep. A screen turning off is fine;
+   system sleep is not. Restore preferred settings after measurement.
+2. Close unnecessary apps, games, downloads and other inference sessions. Leave
+   Ollama and HWiNFO running. Do not update Ollama, model files or dependencies.
+   Keep the laptop on a ventilated surface. Avoid interaction during baseline
+   windows and scored requests.
+3. In HWiNFO, set polling to 500 ms and direct disk CSV logging. Confirm CPU
+   Package Power [W]. Start a new log or continue an append-only file; never
+   overwrite a log used by an earlier block. Record its path/version.
+4. Use the same registered HWiNFO version/dialect across blocks. The pilot used
+   HWiNFO64 8.54-6090 and cp1252; pass the actual values. Run preflight:
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.run_p4 preflight --hwinfo-log 'C:\path\sensors.csv' --encoding cp1252
+```
+
+5. Freeze any owner-supplied calibration labels and reference-length grouping
+   rule in P4_GROUPING before the main run if group-wise comparisons are wanted.
+   Empty maps produce explicit unavailable-group reports. They cannot be inferred
+   from main-run outcomes or silently added to the existing manifest afterward.
+6. Only after approval, run **one block**:
+
+```powershell
+.\.venv313\Scripts\python.exe -u -m experiments.run_p4 run-block --owner-approved --output results/p4-full --hwinfo-log 'C:\path\sensors.csv' --hwinfo-version '8.54-6090' --encoding cp1252
+```
+
+The block discards saved warm-ups, unloads models and records a 60-second start
+baseline. It stops launching after 3 hours, finishes the bounded active request,
+unloads and measures a 60-second end baseline. Four hours is the safety ceiling;
+OS suspension can defeat wall-clock guarantees and will be flagged. The final
+block can be shorter. No next block starts automatically. Leave logging active
+until the command exits and the end baseline has been saved.
+
+Repeat the same command/folder for the next approved block. A new log path is
+allowed if format/version are unchanged; earlier logs must remain accessible.
+Resume skips saved outcomes, including failures, and recovers saved raw responses
+without regeneration. An uncertain in-flight request stops for investigation.
+Do not delete journals, regenerate a timed-out answer or edit a failed row.
+Ctrl+C attempts safe cleanup/end baseline; killing the process or shutting down
+may leave a missing-end flag. Never rerun blindly after an API timeout: first
+ensure Ollama is no longer processing that request.
+
+Net energy uses each block's starting baseline. Drift above max(1 W, 10% of start)
+is flagged and retained; missing end baselines are explicit. Report gross and
+net. No phase-energy estimates or CodeCarbon tracking occur in P4. Every response
+and failure is retained. Back up each closed block, including sensor mirrors,
+and verify OneDrive sync or an independent-device copy before relying on it.
+
+Derived reporting and analysis (no inference):
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.run_p4 report --output results/p4-full
+.\.venv313\Scripts\python.exe -m analysis.full_analysis --run results/p4-full --output results/p4-analysis
+```
+
+full.csv joins immutable answers/measurements/block events. Analysis emits both
+all-row and primary-low-resolution-excluded summaries; unavailable energy is
+never zero. It includes per-arm bootstrap intervals, gross/net cost per correct
+answer, input/output-token OLS and residuals, Pareto plots, and stage-2 noise.
+Grouping files are emitted only for frozen labels; P0 is excluded from them.
+Scaffolds include tool/mode and limitations. The owner writes interpretation.
+Partial batches are provisional, and stage-2 repeats do not overweight stage 1.
