@@ -207,10 +207,10 @@ Before the approved overnight block:
 .\.venv313\Scripts\python.exe -m experiments.run_p4 preflight --hwinfo-log 'C:\path\sensors.csv' --encoding cp1252
 ```
 
-5. Freeze any owner-supplied calibration labels and reference-length grouping
-   rule in P4_GROUPING before the main run if group-wise comparisons are wanted.
-   Empty maps produce explicit unavailable-group reports. They cannot be inferred
-   from main-run outcomes or silently added to the existing manifest afterward.
+5. Complete the separate registered calibration and freeze both grouping maps
+   in P4_GROUPING before the main run. The runner rejects incomplete maps. Labels
+   cannot be inferred from main-run outcomes or added to an existing manifest.
+   See the calibration instructions below.
 6. Only after approval, run **one block**:
 
 ```powershell
@@ -253,3 +253,31 @@ answer, input/output-token OLS and residuals, Pareto plots, and stage-2 noise.
 Grouping files are emitted only for frozen labels; P0 is excluded from them.
 Scaffolds include tool/mode and limitations. The owner writes interpretation.
 Partial batches are provisional, and stage-2 repeats do not overweight stage 1.
+
+
+### Before the first full block: separate calibration
+
+The owner registered 40 requests: 1.5b/P0 once on all tasks, without energy.
+The reference-length grouping is already fixed (median 6 lines, 21 short/19 long).
+The main runner refuses execution until both complete grouping maps are frozen.
+Calibration is deferred until the owner is ready at night. Plug in and select
+Best performance first. Preparation is offline:
+
+```powershell
+.\.venv313\Scripts\python.exe -m experiments.calibrate prepare
+```
+
+When ready for the separately approved calibration:
+
+```powershell
+.\.venv313\Scripts\python.exe -u -m experiments.calibrate run --owner-approved
+.\.venv313\Scripts\python.exe -m experiments.calibrate labels
+```
+
+Review the complete exported labels, freeze them and their source checksums in
+P4_GROUPING, and commit before the main run. Do not use pilot/main outcomes or
+rerun failed answers. Because freezing config changes the registration fingerprint,
+any later calibration resume needs its original committed source. The read-only
+labels command remains available for auditing complete original evidence.
+A separate calibration is not proof of statistical independence; use the labels
+solved/failed, and report actual group sizes as descriptive, noisy groups.

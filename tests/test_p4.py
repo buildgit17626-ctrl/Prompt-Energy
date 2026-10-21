@@ -17,6 +17,7 @@ from prompt_energy.records import read_jsonl
 
 @pytest.fixture
 def full_simulation(tmp_path, monkeypatch):
+    monkeypatch.setitem(config.P4_GROUPING, "calibration", dict.fromkeys(config.TASK_IDS, "solved"))
     clock = Clock(tmp_path / "power.csv")
     api = FakeAPI(clock)
     host = {

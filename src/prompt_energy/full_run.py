@@ -185,6 +185,10 @@ def run_block(
     """Run one bounded block only. Completed resume does not contact local services."""
     if not owner_approved:
         raise PermissionError("Full run not approved; no requests made")
+    if any(set(P4_GROUPING[name]) != set(TASK_IDS) for name in ("calibration", "reference_length")):
+        raise ValueError("Freeze both complete grouping maps before the full run")
+    if not P4_GROUPING["reference_length_rule"]:
+        raise ValueError("Freeze reference-length rule before the full run")
     if not hwinfo_version.strip():
         raise ValueError("Record actual HWiNFO version")
     with directory_lock(root):
