@@ -331,3 +331,40 @@ labels are inferred from scored outcomes. No statistical significance claims or
 written interpretation are generated. Report scaffold repeats limitations and
 leaves interpretation to the owner. Calibration/group definition may require a
 separate registered step; no such inference requests are part of this command.
+
+
+## P4 grouping registration (2026-10-21; before calibration/main outcomes)
+
+Owner selected a separate calibration on all 40 tasks, 1.5b/P0, one repeat,
+numeric task order, unchanged seed 1729/temperature 0/context 4096/token cap 768/
+threads 8/CPU-only decoding and the accepted extraction/sandbox. keep_alive=0;
+save an excluded warm-up, unload before each request. No energy measurement.
+Successful sandbox outcomes label solved; all nonpassing candidate outcomes label
+failed, preserving failure types. Infrastructure/HTTP errors stop for investigation
+and block label export. No automatic retries or replacement tasks. Freeze the
+complete map and provenance in P4_GROUPING before the main run. P0 is excluded
+from both grouping comparisons. Separate calibration avoids defining labels from
+main outcomes, but does not establish stochastic independence or intrinsic task
+difficulty. Counts are unknown: the pooled pilot pass rate does not predict the
+1.5b/P0 calibration pass rate. Small groups are descriptive and noisy.
+
+Reference length: count physical lines of canonical_solution only, excluding
+blank lines and lines whose stripped form starts with #. Inline-comment code
+lines and string/docstring lines count. Split at the median of all 40 lengths;
+length <= median is short, otherwise long. Freeze counts, median and explicit
+labels before calibration. No threshold selection from generated outcomes.
+
+Owner clarified the earlier ~6.5 W observation was under Energy saver, unlike
+the Best performance pilot baseline. It is not a matched idle comparison or
+basis for replacing 15.4201366935 W. A new quiet two-minute check is pending owner
+readiness and log path; preserve original pilot measurements.
+
+Planning estimate: 105 minutes / 320 * 840 = 275.625 minutes (4.59 hours), before
+allowing for arm mix, different tasks, block baselines and machine conditions.
+Two blocks may suffice; this is not a completion guarantee. Few-shot input
+processing adds work even if output is shorter. Full-run approval remains pending.
+
+Reference-length computation frozen before generation: median 6.0 lines, 21 short
+and 19 long. Explicit labels/counts are in P4_GROUPING. The main runner now
+requires both complete maps before making any request. Calibration and full-run
+execution were deferred by the owner until night; no calibration outcomes exist.
