@@ -260,8 +260,10 @@ Partial batches are provisional, and stage-2 repeats do not overweight stage 1.
 The owner registered 40 requests: 1.5b/P0 once on all tasks, without energy.
 The reference-length grouping is already fixed (median 6 lines, 21 short/19 long).
 The main runner refuses execution until both complete grouping maps are frozen.
-Calibration is deferred until the owner is ready at night. Plug in and select
-Best performance first. Preparation is offline:
+Calibration completed on 2026-10-21: 26 solved and 14 failed; both maps are
+frozen in config with provenance. For historical reproduction, use source commit
+cc12c44 and a separate output directory; do not regenerate accepted observations.
+Plug in and select Best performance before any authorized run. Preparation is offline:
 
 ```powershell
 .\.venv313\Scripts\python.exe -m experiments.calibrate prepare

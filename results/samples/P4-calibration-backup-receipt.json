@@ -1,0 +1,17 @@
+{
+  "source": "C:\\Users\\Dhruv Brahmbhatt\\prompt-energy-study\\results\\p4-calibration-2026-10-21",
+  "destination": "C:\\Users\\Dhruv Brahmbhatt\\OneDrive\\Documents\\Experiments\\Prompt-Energy-backups\\p4-calibration-2026-10-21",
+  "files": 9,
+  "sha256": {
+    ".lock": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "grouping-export.json": "75dd8359ac6449c32beed6825f147e34c6cb6d8ef19268247276403f2b59c8be",
+    "manifest.json": "b1350499514a04579059ff3d426daa2d446bb2158d581c3d181ad67fd915552b",
+    "raw.jsonl": "d20989f0f3fca69705381accafdaf2c070b4ff0e6190bbc25d4dcb8c02162889",
+    "requests.jsonl": "b96fd7ceb81708d36197c4e4d9915dc144918e7f2941ccb56196ae37db6eb7d4",
+    "results.csv": "3af4b9c1016268b023a93aa780cc603b6621a29a8436defec0e9e54e6695b2dd",
+    "results.jsonl": "03bc609b86f31f8a8058e9d39a1c8bec6e22d7115850e8f2244954a1b638e893",
+    "resume-audit.json": "17100c9c8c71a1975e56bc3c7fcc1cb87d19c74fc80c6bccf6e90ab856888eff",
+    "sessions.jsonl": "34dc892aa661d09079ece5e337be1d3fde38c1344c1046f6bcd1dc76698e156e"
+  },
+  "cloud_sync_verified": false
+}

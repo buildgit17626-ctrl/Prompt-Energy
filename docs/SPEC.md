@@ -377,3 +377,79 @@ maps before any scored run. Main execution is planned for tonight, not started:
 ask the owner whether HWiNFO logging has begun and confirm its full new CSV path
 before preflight. Check 500 ms growth/freshness, AC/Best performance, awake/lid
 settings, runtime/digests and frozen registration before the main program.
+
+
+## P4 grouping freeze: 2026-10-21T13:00:18+05:30
+
+Owner-approved calibration completed all 40 registered tasks using 1.5b/P0,
+one repeat and unchanged registered decoding/extraction/sandbox (source commit
+cc12c44). No energy measurement or scored P4 block occurred. Raw evidence:
+`results/p4-calibration-2026-10-21`. One excluded warm-up; 40 calibration responses.
+
+Calibration grouping: **26 solved, 14 failed** (13 test_failed, 1 sandbox timeout).
+Solved means the saved outcome passed all tests; failed means the saved candidate
+did not pass. No retries, repairs, substitutions or main-run outcomes were used.
+No infrastructure/API failures occurred. Completed resume made zero HTTP calls;
+requests/raw/results/sessions/manifest SHA-256 values remained unchanged.
+
+Reference-length grouping: **21 short, 19 long**, median **6.0** qualifying lines.
+Count canonical_solution physical lines excluding blank and comment-only lines
+(stripped prefix #). Inline-comment code and string/docstring lines count.
+Short means count <= median across the fixed 40, including ties; otherwise long.
+Counts/labels were frozen before calibration and remain unchanged. Both explicit
+maps, freeze timestamp and calibration evidence hashes are now in P4_GROUPING.
+P0 stays excluded from group-wise comparisons. These small groups are descriptive;
+a single calibration outcome is not intrinsic difficulty or guaranteed stability.
+
+| Task | Calibration group | Reference lines | Length group |
+| --- | --- | ---: | --- |
+| HumanEval/0 | solved | 7 | long |
+| HumanEval/1 | solved | 14 | long |
+| HumanEval/11 | solved | 6 | short |
+| HumanEval/13 | solved | 3 | short |
+| HumanEval/14 | solved | 4 | short |
+| HumanEval/24 | solved | 3 | short |
+| HumanEval/29 | solved | 1 | short |
+| HumanEval/39 | solved | 15 | long |
+| HumanEval/43 | solved | 5 | short |
+| HumanEval/46 | solved | 7 | long |
+| HumanEval/53 | solved | 1 | short |
+| HumanEval/55 | solved | 5 | short |
+| HumanEval/57 | failed | 3 | short |
+| HumanEval/73 | solved | 5 | short |
+| HumanEval/74 | solved | 10 | long |
+| HumanEval/76 | failed | 6 | short |
+| HumanEval/89 | failed | 8 | long |
+| HumanEval/90 | failed | 2 | short |
+| HumanEval/92 | solved | 5 | short |
+| HumanEval/94 | solved | 13 | long |
+| HumanEval/96 | failed | 10 | long |
+| HumanEval/101 | failed | 10 | long |
+| HumanEval/102 | failed | 7 | long |
+| HumanEval/105 | solved | 19 | long |
+| HumanEval/115 | failed | 1 | short |
+| HumanEval/116 | solved | 1 | short |
+| HumanEval/117 | failed | 9 | long |
+| HumanEval/122 | failed | 1 | short |
+| HumanEval/127 | failed | 15 | long |
+| HumanEval/128 | solved | 3 | short |
+| HumanEval/133 | solved | 5 | short |
+| HumanEval/140 | failed | 20 | long |
+| HumanEval/143 | solved | 11 | long |
+| HumanEval/144 | failed | 7 | long |
+| HumanEval/148 | solved | 9 | long |
+| HumanEval/150 | solved | 8 | long |
+| HumanEval/156 | solved | 14 | long |
+| HumanEval/158 | solved | 1 | short |
+| HumanEval/160 | failed | 4 | short |
+| HumanEval/162 | solved | 2 | short |
+
+Calibration evidence SHA-256:
+
+- `manifest.json`: `b1350499514a04579059ff3d426daa2d446bb2158d581c3d181ad67fd915552b`
+- `raw.jsonl`: `d20989f0f3fca69705381accafdaf2c070b4ff0e6190bbc25d4dcb8c02162889`
+- `results.jsonl`: `03bc609b86f31f8a8058e9d39a1c8bec6e22d7115850e8f2244954a1b638e893`
+
+The main run remains unstarted. Before tonight's main execution, ask whether
+HWiNFO logging has begun and confirm the new CSV path; run the registered
+preflight and obtain main-block approval. Calibration does not grant that approval.
