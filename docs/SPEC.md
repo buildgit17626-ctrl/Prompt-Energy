@@ -368,3 +368,12 @@ Reference-length computation frozen before generation: median 6.0 lines, 21 shor
 and 19 long. Explicit labels/counts are in P4_GROUPING. The main runner now
 requires both complete maps before making any request. Calibration and full-run
 execution were deferred by the owner until night; no calibration outcomes exist.
+
+
+Owner execution authorization (2026-10-21): run only the separate 40-task
+calibration now through `python -m experiments.run_p4 calibrate --owner-approved`.
+This command needs no HWiNFO and never dispatches run-block. Freeze resulting
+maps before any scored run. Main execution is planned for tonight, not started:
+ask the owner whether HWiNFO logging has begun and confirm its full new CSV path
+before preflight. Check 500 ms growth/freshness, AC/Best performance, awake/lid
+settings, runtime/digests and frozen registration before the main program.

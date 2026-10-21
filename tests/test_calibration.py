@@ -60,6 +60,24 @@ def test_gate_no_side_effects(tmp_path):
     assert not (tmp_path / "absent").exists()
 
 
+def test_run_p4_calibrate_dispatch(monkeypatch):
+    import sys
+
+    from experiments.run_p4 import main
+
+    calls = []
+
+    def fake_run(root, *, approved):
+        calls.append((root, approved))
+        return {"completed": 40, "new_requests": 40}
+
+    monkeypatch.setattr(calibration, "run", fake_run)
+    monkeypatch.setattr(sys, "argv", ["run_p4", "calibrate", "--owner-approved"])
+    assert main() == 0
+    assert calls[0][0].name == "p4-calibration-2026-10-21"
+    assert calls[0][1] is True
+
+
 def test_main_run_requires_frozen_calibration(tmp_path, monkeypatch):
     from prompt_energy.full_run import run_block
     from prompt_energy.hwinfo import LogFormat

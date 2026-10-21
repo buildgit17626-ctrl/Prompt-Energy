@@ -270,7 +270,7 @@ Best performance first. Preparation is offline:
 When ready for the separately approved calibration:
 
 ```powershell
-.\.venv313\Scripts\python.exe -u -m experiments.calibrate run --owner-approved
+.\.venv313\Scripts\python.exe -u -m experiments.run_p4 calibrate --owner-approved
 .\.venv313\Scripts\python.exe -m experiments.calibrate labels
 ```
 
@@ -281,3 +281,6 @@ any later calibration resume needs its original committed source. The read-only
 labels command remains available for auditing complete original evidence.
 A separate calibration is not proof of statistical independence; use the labels
 solved/failed, and report actual group sizes as descriptive, noisy groups.
+
+Before tonight's main run, confirm with the owner that HWiNFO logging has begun
+and obtain the new CSV path. Calibration does not require that log.

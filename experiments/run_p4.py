@@ -15,12 +15,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "command",
-        choices=("prepare", "preflight", "run-block", "report"),
+        choices=("prepare", "preflight", "run-block", "report", "calibrate"),
         nargs="?",
         default="prepare",
     )
     parser.add_argument("--owner-approved", action="store_true")
-    parser.add_argument("--output", type=Path, default=Path("results/p4-full"))
+    parser.add_argument("--output", type=Path)
     parser.add_argument("--hwinfo-log", type=Path)
     parser.add_argument("--hwinfo-version", default="")
     parser.add_argument("--encoding", default="cp1252")
@@ -32,6 +32,12 @@ def main() -> int:
     parser.add_argument("--power-column", default="CPU Package Power [W]")
     parser.add_argument("--power-index", type=int)
     args = parser.parse_args()
+    if args.output is None:
+        args.output = Path(
+            "results/p4-calibration-2026-10-21"
+            if args.command == "calibrate"
+            else "results/p4-full"
+        )
     fmt = LogFormat(
         args.encoding,
         args.delimiter,
@@ -45,6 +51,10 @@ def main() -> int:
     try:
         if args.command == "prepare":
             result = prepare()
+        elif args.command == "calibrate":
+            from prompt_energy.calibration import run
+
+            result = run(args.output.resolve(), approved=args.owner_approved)
         elif args.command == "report":
             result = {"rows": export_full(args.output.resolve())}
         else:

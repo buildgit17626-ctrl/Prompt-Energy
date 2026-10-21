@@ -28,3 +28,15 @@ run pytest/Ruff/prepare, and copy all results to a fresh OneDrive backup with
 checksums. Cloud upload requires separate verification. No main-run permission.
 The requested idle recheck waits for owner readiness/new CSV and is not performed
 while tests or inference are active. The earlier 6.5 W source is still unknown.
+
+
+## Execution authorization update (2026-10-21)
+
+Owner explicitly authorized implementing and running calibration only, then
+freezing both maps with timestamp and rules in SPEC. Add `run_p4 calibrate`
+as the public entry point, defaulting to a separate calibration directory;
+keep the existing calibration command compatible. Test dispatch and confirm
+no HWiNFO requirement or scored-block path. Commit before generation, execute
+40 requests once, verify complete no-op resume before changing config, then
+freeze labels and source checksums. No idle check or scored P4 block this step.
+The earlier 6.5 W observation was clarified as Energy saver, not comparable idle.
