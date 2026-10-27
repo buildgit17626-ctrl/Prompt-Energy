@@ -63,3 +63,16 @@ licence text and exact templates are retained in the local P2 manifest.
   https://mlco2.github.io/codecarbon/methodology.html . Implementation targets the
   pinned 3.0.4 API verified against installed source; current online docs may differ.
   Offline machine-mode estimates are secondary to CPU Package Power integration.
+
+
+## Manuscript context verified 2026-10-27
+
+- Schwartz, Dodge, Smith and Etzioni. Green AI, arXiv:1907.10597 (2019 preprint).
+  https://arxiv.org/abs/1907.10597 . Efficiency alongside accuracy and access.
+- Poddar, Koley, Misra, Ganguly and Ghosh. Towards Sustainable NLP: Insights from
+  Benchmarking Inference Energy in Large Language Models. NAACL 2025, 12688-12704.
+  https://aclanthology.org/2025.naacl-long.632/ . Inference energy benchmarking;
+  do not interpret its results as measurements of this laptop.
+- Hui et al. Qwen2.5-Coder Technical Report (2024), arXiv:2409.12186.
+  https://arxiv.org/abs/2409.12186 . Model-family context; not an explanation of
+  our observed prompt rankings or proof of benchmark independence.

@@ -195,6 +195,7 @@ def plots(
             ax.scatter(x, g.value * 1000, label=["Net", "Gross"][k], s=20)
         ax.set(xticks=np.arange(7), xticklabels=ARMS, title=model.split(":")[-1], ylim=(0, None))
         ax.legend()
+    axes[0].set_ylim(0, float(ratios.high.max()) * 1080)
     axes[0].set_ylabel("Energy per correct solution (mWh)")
     save(
         fig,
@@ -218,7 +219,8 @@ def plots(
             xticklabels=ARMS,
             ylabel="Energy on failed attempts (%)",
         )
-        axes[0, col].legend()
+        axes[0, col].set_ylim(0, 70)
+        axes[0, col].legend(loc="upper right")
         axes[1, col].plot(x, g.net_wh_per_output_token * 1000, "o-", label="Net")
         axes[1, col].plot(x, g.gross_wh_per_output_token * 1000, "s-", label="Gross")
         axes[1, col].set(xticks=x, xticklabels=ARMS, ylabel="Energy / generated token (mWh)")
@@ -276,7 +278,8 @@ def plots(
                 axes[row, col].bar(ARMS, values, bottom=bottom, label=category.replace("_", " "))
                 bottom += values
             axes[row, col].set(title=f"{model.split(':')[-1]}: {title}", ylabel="Failure count")
-            axes[row, col].legend(fontsize=6.5, ncol=2)
+            axes[row, col].set_ylim(0, max(bottom) * 1.6)
+            axes[row, col].legend(fontsize=7, ncol=2, loc="upper right")
     save(
         fig,
         "05_failure_taxonomy",

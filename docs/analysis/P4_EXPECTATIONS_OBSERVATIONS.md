@@ -1,3 +1,5 @@
+> Superseded presentation draft: use P4_MANUSCRIPT.md for the corrected paired contrasts, ratio intervals and baseline sensitivity. This file retains the earlier review history. Final author approval remains pending.
+
 # P4 expectations versus observations: owner review draft
 
 Prepared 2026-10-27. **Interpretation approval pending.** This record combines the
