@@ -7,17 +7,18 @@ Earlier comparison graphics remain supplementary, not the revised main narrative
 
 ## Current packet and coverage
 
-The PDF contains 12 A4 pages plus one A1 landscape comparison sheet. Main body,
+The PDF contains a continuously paginated A4 paper plus one A1 landscape comparison sheet. Main body,
 tables, captions and references use embedded Times New Roman at 14 pt; headings
 are larger, and page footers smaller. Continuous flow replaces artificial section
 page breaks. The final A1 page supports digital zoom and large-format printing.
-The owner's removed author-name line stays removed.
+The owner's removed author-name line stays removed. An opening rationale before
+the abstract explains the practical motivation and states the study's small scope.
 
 - Figures 1-2: task-paired contrasts and energy-per-correct ratio intervals.
 - Figure 3: all-row machine failures and selected source-review mechanisms.
 - Figure 4: failed-attempt energy shares and energy/token complement.
 - Figure 5: registered start versus post-hoc end/midpoint baseline scenarios.
-- Section 9.1 (pages 10-11): the three categories and P1/P3_3/P2 interpretation.
+- Section 9.1: the three categories and P1/P3_3/P2 interpretation.
 - Final sheet S1-S2: passed/failed bars for each model.
 - S3-S5: input by prompt and separate output-by-prompt model views.
 - S6-S11: input versus energy, success and output tokens for each model.

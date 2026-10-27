@@ -4,6 +4,12 @@ A consumer-CPU experiment with two small Qwen2.5-Coder models
 
 Research discussion paper | 27 October 2026
 
+## Why this experiment matters
+
+An AI-generated answer has a physical cost: computation, time and energy. For local users, efficiency affects whether useful AI can run within the resources available to them. Across repeated requests, differences in resource use can accumulate. Efficiency therefore deserves attention alongside accuracy and usability [1,2]. Prompt design is one accessible control because instructions can change response length and the likelihood of obtaining usable output. The relevant question is not simply how to generate fewer tokens, but how to obtain a correct answer at a reasonable resource cost.
+
+This report takes a small first step: 40 programming tasks, seven prompt variants, two small models and one consumer laptop. It measures tokens, latency, test success and estimated CPU package energy, with substantial baseline-drift limitations. It does not establish battery-life improvements, monetary or carbon savings, or a universally efficient prompt. Its value is to make resource costs visible, examine them alongside verified success, and identify better-controlled questions for future research.
+
 ## Abstract
 
 We examine how seven prompt variants relate to output length, test success and estimated CPU package energy for local code generation. Two quantized Qwen2.5-Coder models (0.5B and 1.5B) completed the same 40 HumanEval tasks, producing 560 stage-1 requests. A separate 280-request stage supplied repeat diagnostics. Adding “Return only code” to the minimal instruction reduced mean net post-load energy from 52.65 to 26.61 mWh for 0.5B and from 89.06 to 23.59 mWh for 1.5B. Pass counts were 24 versus 24 and 29 versus 26, respectively; paired accuracy intervals include zero and do not establish equivalence. Explanation and step-by-step instructions generated substantially longer responses without higher aggregate pass counts than code-only P1. We report task-paired contrasts, bootstrap energy-per-correct intervals, and an audit of 64 selected failures. All stage-1 energy estimates carry baseline-drift flags, and the registered low-resolution exclusion disproportionately removes short requests. These findings describe one machine and two models; they motivate tighter measurement and controlled prompt studies rather than a universal prompting recommendation.
@@ -107,11 +113,11 @@ For 0.5B, P3_3 uses the fewest output tokens and lowest mean energy per attempt,
 
 ## 6. Failure mechanisms and the output cap
 
+Stage 1 recorded 347 passes and 213 failures: 198 test_failed, 12 truncated, two sandbox timeouts and one no_code. P2 hit the 768-token cap in 4/40 (10%) 0.5B requests and 1/40 (2.5%) 1.5B requests. P4 hit it in 3/40 (7.5%) 0.5B requests and 0/40 1.5B requests. Cap failures therefore cannot explain all explanation-prompt failures; all 13 failures for 1.5B/P4 were test failures.
+
 ![Figure 3](../../results/p4-revision/05_failure_taxonomy.png)
 
 Figure 3. Top panels count recorded machine failure types across all 40 stage-1 requests per arm. Bottom panels show mechanisms in the selected 64-case review sample, not estimated population prevalence. No scoring rules or outcomes were changed.
-
-Stage 1 recorded 347 passes and 213 failures: 198 test_failed, 12 truncated, two sandbox timeouts and one no_code. P2 hit the 768-token cap in 4/40 (10%) 0.5B requests and 1/40 (2.5%) 1.5B requests. P4 hit it in 3/40 (7.5%) 0.5B requests and 0/40 1.5B requests. Cap failures therefore cannot explain all explanation-prompt failures; all 13 failures for 1.5B/P4 were test failures.
 
 The AI-assisted review selected the first three failures by run ID within each model/arm, plus every stage-1 cap/no-code case and every saved NameError/timeout case. The resulting 64 cases comprise 42 wrong-logic cases, seven missing-helper/import cases, 12 cap failures, two timeouts and one prose-only response. No extraction problem was identified in this sample. This is not an exhaustive independent human audit; sample selection enriches particular failures and prevents estimating prevalence from these proportions. Annotations were checked against saved source text; an independent second review was not performed.
 

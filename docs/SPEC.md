@@ -512,3 +512,10 @@ denominators and drift caveat. This changes presentation, not design or outcomes
 The owner's removal of the author line is preserved. AI-assisted annotation
 provenance remains explicit; no independent human second review is implied.
 An outreach email draft is local only. No sending or new generation authorized.
+
+
+Editorial addition (2026-10-27): owner requested an opening rationale before the
+abstract explaining why prompt-related resource use merits evaluation alongside
+correctness. The opening states the small exploratory scope and separates
+measured CPU package estimates from unmeasured battery, financial or carbon
+outcomes. No experimental or statistical registration changes.

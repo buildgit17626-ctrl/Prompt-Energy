@@ -78,11 +78,11 @@ def build(source: Path, output: Path) -> None:
             while caption_index < len(lines) and not lines[caption_index].strip():
                 caption_index += 1
             if caption_index < len(lines) and lines[caption_index].startswith("Figure "):
-                story.append(
-                    KeepTogether(
-                        [figure, Spacer(1, 5), Paragraph(escape(lines[caption_index]), small)]
-                    )
-                )
+                group = [figure, Spacer(1, 5), Paragraph(escape(lines[caption_index]), small)]
+                # Keep a section heading with its opening figure after text reflows.
+                if story and isinstance(story[-1], Paragraph) and story[-1].style is head:
+                    group.insert(0, story.pop())
+                story.append(KeepTogether(group))
                 i = caption_index
             else:
                 story.extend([figure, Spacer(1, 5)])

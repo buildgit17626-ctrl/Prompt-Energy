@@ -27,3 +27,15 @@ without invented institution, year, grades, work or availability.
 Assumptions: a zoomable landscape foldout is preferable to unreadably compressing
 30 chart panels onto A4; draft preparation is authorized, external sending is not.
 Owner review of judgments is not replaced by a numerical audit.
+
+
+## Opening rationale addition (2026-10-27)
+
+Owner requests an attention-setting description before the abstract. Add a brief
+why-this-matters section about local usability, repeated deployment cost and
+quality-aware resource evaluation, with references to existing primary sources.
+State the study's small scope and measurement limitations in the opening. Do not
+add quantified global impact, battery-life or financial savings claims. Refresh
+both PDF copies and archives; verify text layout and evidence hashes. This is an
+editorial addition with a small renderer fix to keep headings with their opening
+figures after reflow; no data, protocol or email changes.
