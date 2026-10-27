@@ -1,10 +1,8 @@
 # Explicit code-only instructions and the energy cost of correct code
 
-Dhruv Brahmbhatt
-
 A consumer-CPU experiment with two small Qwen2.5-Coder models
 
-Author-review draft | 27 October 2026 | Not peer reviewed
+Research discussion paper | 27 October 2026
 
 ## Abstract
 
@@ -18,7 +16,6 @@ Green AI argues that efficiency should accompany accuracy as an evaluation crite
 
 The central comparison is P1 versus P0: the instruction gains only “Return only code.” Comparing P1 against an example-guided prompt would mix the output restriction with demonstrations and instruction wording. P3 variants are instead compared descriptively with P0, while acknowledging their own wording change. Practical relevance rests on measuring the cost of usable output under stated conditions, not on attributing internal thought processes to a model.
 
----PAGE---
 
 ## 2. Experimental setup and protocol
 
@@ -40,9 +37,8 @@ P5: “Please read the following Python function signature and docstring careful
 
 Forty tasks were sampled without replacement with seed 1729 from 164 HumanEval tasks. Stage 1 comprised 40 tasks x seven arms x two models x one repeat. Stage 2 used a previously frozen ten-task subset with two extra repeats (280 requests), for noise diagnostics only. Within-stage order was seeded and interleaved. Stage 1 is not pooled with stage 2, which would overweight ten tasks. Separate calibration froze 26 solved and 14 failed labels; reference-length grouping froze 21 short and 19 long tasks at a six-line median. P0 is excluded from group-wise comparisons.
 
-Native API fields supplied input/output token counts and durations. A saved warm-up was excluded; scored requests used keep_alive=0 under the conservative cache policy, unloading between calls and recording load duration. Earlier probe text was not identical at fixed settings; we do not promise deterministic generation. HWiNFO 8.54-6090 logged CPU Package Power every 500 ms. AC power and Best performance were checked; the intended protocol also required sleep disabled and unnecessary apps closed. The experiment did not independently rule out every background process.
+Native Ollama API fields supplied input/output token counts and durations [5]. A saved warm-up was excluded; scored requests used keep_alive=0 under the conservative cache policy, unloading between calls and recording load duration. Earlier probe text was not identical at fixed settings; we do not promise deterministic generation. HWiNFO 8.54-6090 logged CPU Package Power every 500 ms [6]. AC power and Best performance were checked; the intended protocol also required sleep disabled and unnecessary apps closed. The experiment did not independently rule out every background process.
 
----PAGE---
 
 ## 3. Measurement, scoring and analysis
 
@@ -56,9 +52,8 @@ The original H1-H5 concern output-length association, concise-output cost/accura
 
 Within each model, we align the same 40 tasks across arms. For each contrast A-B, we bootstrap task pairs 2,000 times with seed 1729, calculating mean net-energy differences and mean binary-outcome differences. We report 2.5th/97.5th percentiles and discordant pass counts. These are pointwise intervals, with no multiplicity adjustment. Per-arm cost-per-correct intervals resample tasks and recompute sum(energy)/sum(passed), including failures in the numerator. No zero-success resample occurred in these data; the script marks intervals unavailable if any occur rather than silently dropping draws. Task resampling does not account for systematic drift or missing repeat evidence.
 
-For the baseline sensitivity, the same saved gross integrals and post-load seconds are evaluated against constant end and midpoint baselines. These scenarios change an assumption; they neither reconstruct the idle trajectory nor replace the registered estimates. The pilot contributes supplementary repeat diagnostics only. All saved observations remain unchanged.
+For the baseline sensitivity, the same saved gross integrals and post-load seconds are evaluated against constant end and midpoint baselines. These scenarios change an assumption; they neither reconstruct the idle trajectory nor replace the registered estimates. The pilot contributes supplementary repeat diagnostics only. 
 
----PAGE---
 
 ## 4. Results: paired contrasts are the central comparison
 
@@ -81,7 +76,6 @@ Figure 1. Task-paired differences (A minus B) in stage-1 net energy and pass rat
 
 P1 reduced net energy versus P0 by 49.5% for 0.5B and 73.5% for 1.5B. Equal 0.5B pass totals conceal six tasks gained and six lost; the outputs are not interchangeable. For 1.5B, six gained and three lost produce a three-task increase. The intervals permit accuracy changes in either direction. P2 and P4 have substantially higher energy than P1 in these samples, while neither has a higher aggregate pass count. P3_1-P0 points toward lower energy for both models but opposite accuracy directions. Because P3 also changes wording, this is not a causal estimate of examples alone.
 
----PAGE---
 
 ## 5. Cost per correct solution and per-attempt outcomes
 
@@ -110,7 +104,6 @@ Table 1. Stage-1 means over all attempts. Energy is estimated CPU package energy
 
 For 0.5B, P3_3 uses the fewest output tokens and lowest mean energy per attempt, but passes only 19 tasks. For 1.5B, P3_1 has the highest observed pass count (30), one above P1; that single-task difference is uncertain. A request-level saving and a cost-per-correct saving are different objectives.
 
----PAGE---
 
 ## 6. Failure mechanisms and the output cap
 
@@ -120,11 +113,10 @@ Figure 3. Top panels count recorded machine failure types across all 40 stage-1 
 
 Stage 1 recorded 347 passes and 213 failures: 198 test_failed, 12 truncated, two sandbox timeouts and one no_code. P2 hit the 768-token cap in 4/40 (10%) 0.5B requests and 1/40 (2.5%) 1.5B requests. P4 hit it in 3/40 (7.5%) 0.5B requests and 0/40 1.5B requests. Cap failures therefore cannot explain all explanation-prompt failures; all 13 failures for 1.5B/P4 were test failures.
 
-The AI-assisted review selected the first three failures by run ID within each model/arm, plus every stage-1 cap/no-code case and every saved NameError/timeout case. The resulting 64 cases comprise 42 wrong-logic cases, seven missing-helper/import cases, 12 cap failures, two timeouts and one prose-only response. No extraction problem was identified in this sample. This is not an exhaustive independent human audit; sample selection enriches particular failures and prevents estimating prevalence from these proportions. Owner verification of annotations is pending.
+The AI-assisted review selected the first three failures by run ID within each model/arm, plus every stage-1 cap/no-code case and every saved NameError/timeout case. The resulting 64 cases comprise 42 wrong-logic cases, seven missing-helper/import cases, 12 cap failures, two timeouts and one prose-only response. No extraction problem was identified in this sample. This is not an exhaustive independent human audit; sample selection enriches particular failures and prevents estimating prevalence from these proportions. Annotations were checked against saved source text; an independent second review was not performed.
 
 Concrete examples include full-0004 (splits only comma-space, leaving ordinary words unsplit), full-0054 (ignores operator precedence), full-0171 (calls math.ceil without importing math), and full-0460 (undefined is_prime helper). In full-0452 the raw response contains prose and no target function: the extractor did not discard a valid implementation. Some capped responses contain parseable code followed by unfinished explanation; cap failure is a protocol outcome, not necessarily incomplete code. Tests were not rerun to revise those outcomes. Per-run evidence, reasons and text hashes are in P4_FAILURE_REVIEW.csv; raw and extracted text can be inspected with experiments.show_run.
 
----PAGE---
 
 ## 7. Failed-attempt energy and selection effects
 
@@ -138,7 +130,6 @@ The registered low-resolution sensitivity removes 70 of 560 requests because the
 
 Energy per generated token offers a different perspective but cannot repair that selection bias. For 1.5B, P1 costs 0.332 mWh net per generated token versus 0.259 for P4, despite being much cheaper per attempt. Short outputs amortize prompt-processing and other overhead over fewer tokens. This is a plausible explanation, not a measured phase decomposition. Optimizing energy per token alone could encourage unnecessary output and conflict with the user's objective of a correct answer.
 
----PAGE---
 
 ## 8. Baseline-drift sensitivity and repeat evidence
 
@@ -163,7 +154,6 @@ Stage 2 contains only 64/140 complete energy pairs, with 181/280 energy values. 
 
 Table 2. Supplementary pilot only: absolute differences between two net post-load HWiNFO estimates on the same task/model/arm. The pilot used a 15.420 W baseline, only four prompt arms, and active CodeCarbon measurement overhead; its conditions differ from the full run. The pilot is excluded from hypothesis tests. All complete pairs in these pilot and stage-2 summaries have equal output-token counts, but this alone does not prove identical text or identical system state. Spreads reflect operating conditions and measurement variation; they are not precise isolated sensor-noise estimates. Small P1-P5 differences are comparable to some observed repeat spreads, motivating caution.
 
----PAGE---
 
 ## 9. Expectations, interpretation and limits
 
@@ -175,7 +165,19 @@ These are explanation-requesting prompts applied to the same code models, not se
 
 Model size is not a universal energy ranking. The 1.5B model has higher pass counts for every arm, but its mean net energy is lower for P1 and P5 and higher for several other arms. Per-token compute cost, response length and success jointly affect total cost. P1 is the strongest observed cost-per-correct candidate on both models; P3_3 is the cheapest per attempt on 0.5B; P3_1 has the highest observed accuracy on 1.5B. None establishes a universally optimal prompt or a guaranteed accuracy-energy trade-off for all workloads.
 
-External validity is limited by one laptop, one model family, one quantization, 40 benchmark tasks, one main observation per task/arm/model, possible benchmark contamination, and a fixed output cap. Energy excludes testing, retries, whole-device consumption and training. Post-hoc contrasts are exploratory, intervals are pointwise, drift is systematic, and manual failure annotations need human review. Lower CPU core counts, cloud deployments, larger models and different domains were not tested. This evidence supports a bounded empirical case study rather than broad environmental or financial savings claims.
+External validity is limited by one laptop, one model family, one quantization, 40 benchmark tasks, one main observation per task/arm/model, possible benchmark contamination, and a fixed output cap. Energy excludes testing, retries, whole-device consumption and training. Post-hoc contrasts are exploratory, intervals are pointwise, drift is systematic, and the failure annotations have no independent second-review agreement estimate. Lower CPU core counts, cloud deployments, larger models and different domains were not tested. This evidence supports a bounded empirical case study rather than broad environmental or financial savings claims.
+
+## 9.1. Comparing the three prompt categories
+
+The categories organize the seven existing arms; they are not different model architectures or pooled treatment groups. Category A contains task instructions and generation (P0/P1/P5). Category B adds original examples before generation (P3_1/P3_3). Category C requests explanation or step-by-step reasoning before code (P2/P4). The final comparison sheet shows each arm separately on both models, including all supplementary views requested for this study.
+
+Within Category A, P1 has the lowest observed output length and mean net energy on both models: 227.5 tokens and 26.61 mWh on 0.5B, and 71.1 tokens and 23.59 mWh on 1.5B. P0 uses more output and energy without a higher aggregate pass count. P5 adds 32 mean input tokens relative to P1, but its output is only 7.1% longer on 0.5B and 3.6% longer on 1.5B. P5 passes two fewer tasks on each model. These observations do not establish that longer instructions necessarily cause hallucination or poorer accuracy.
+
+Within Category B, three examples produce fewer output tokens and lower mean net energy than one example on both models: 194.2 versus 357.8 tokens and 25.18 versus 41.05 mWh on 0.5B; 98.2 versus 130.2 tokens and 33.84 versus 40.94 mWh on 1.5B. In both cases, P3_3 passes two fewer tasks than P3_1 (19 versus 21; 28 versus 30). P3_3 therefore lowers per-attempt cost here while P3_1 has the higher pass count. Relative to P0, both example-guided arms have fewer successes on 0.5B and more on 1.5B. This model-dependent result contradicts a universal claim that examples always help or always waste resources.
+
+Within Category C, P2 and P4 both produce long responses. On 0.5B, they pass 22/40 each; P4 uses slightly fewer tokens and lower energy (520.4 versus 531.0 tokens; 57.28 versus 59.13 mWh). On 1.5B, P4 passes one additional task (27 versus 26) but uses more output and energy (526.5 versus 500.1 tokens; 136.34 versus 128.29 mWh). Thus P4 is not uniformly worse than P2. Both have higher per-attempt and per-correct energy than P1 in this sample.
+
+Comparing representatives P1/P3_3/P2 across categories illustrates why the metric matters. On 0.5B, mean net energy is 26.61/25.18/59.13 mWh and passes are 24/19/22; net energy per correct is 44.34/53.01/107.50 mWh. P3_3 is cheapest per attempt, while P1 has the lower cost per correct. On 1.5B, corresponding mean net energies are 23.59/33.84/128.29 mWh, passes 29/28/26, and net energy per correct 32.53/48.34/197.37 mWh. P1 is the strongest observed representative on these three metrics. These selected arms do not establish that every prompt in a category shares the same performance.
 
 ## 10. Future work and questions for prospective supervisors
 
@@ -187,13 +189,12 @@ A separate prefix-cache experiment could compare controlled shared prefixes with
 2. How should we handle the observed idle-baseline drift: repeated local baselines, a time-varying model, gross-energy emphasis, or external power measurement?
 3. Which next experiment would be most informative: a factorial examples/output-format study, controlled prefix caching, or CPU inference optimization at a fixed quality target?
 
----PAGE---
 
-## 11. Conclusion and author review
+## 11. Conclusion
 
 In this consumer-CPU experiment, adding a code-only instruction to a minimal prompt was associated with substantially shorter responses and lower estimated CPU package energy. Accuracy differences were uncertain under task-paired resampling. Example-guided and explanation-requesting prompts showed model-dependent correctness and cost; per-attempt rankings differed from per-correct rankings. The strongest practical lesson is to evaluate output cost together with verified success under the intended runtime, while preserving measurement limitations. It is not yet justified to claim that one prompt style universally saves energy without affecting accuracy.
 
-This manuscript is a discussion draft for the author's final review, not an accepted paper or a claim of independent replication. AI assistance was used for analysis implementation, failure annotations and drafting; the author must verify the evidence and approve interpretations before external sharing. No affiliation, collaborator, supervisor endorsement or publication venue is implied.
+AI assistance was used for analysis implementation, source-based failure annotations and manuscript preparation. The annotation review has no independent second annotator. This report presents an exploratory experiment for research discussion.
 
 ## References
 
@@ -211,8 +212,15 @@ This manuscript is a discussion draft for the author's final review, not an acce
 
 ## Appendix: retained evidence and software
 
-The primary analysis uses stage 1 of results/p4-full/full.csv; the CSV contains all 840 requests and explicitly marks stage. Raw responses, request metadata, tests and sensor logs remain in the project archive. The full CSV SHA-256 is b426f6bb5e79af91e437623e6692b9b2f41efc7aad7faec99ef50f81dba6e0e0. Generation source commit: 041f169. New post-hoc outputs are under results/p4-revision, including paired differences, ratio intervals, baseline scenarios, repeat diagnostics and source hashes. Raw logs are not publicly released with this draft.
+The primary analysis uses stage 1 of results/p4-full/full.csv; the CSV contains all 840 requests and explicitly marks stage. Raw responses, request metadata, tests and sensor logs remain in the project archive. The full CSV SHA-256 is b426f6bb5e79af91e437623e6692b9b2f41efc7aad7faec99ef50f81dba6e0e0. Generation source commit: 041f169. New post-hoc outputs are under results/p4-revision, including paired differences, ratio intervals, baseline scenarios, repeat diagnostics and source hashes. Raw logs are retained in the project archive and are not publicly released with this report.
 
 The HumanEval archive uses revision 6d43fb980f9fee3c892a914eda09951f772ad10d under MIT; exact model tags were checked under Apache 2.0. Local model SHA-256 digests: 0.5B, 4ff64a7f502a08b7616edb8ca0a79eb1853fc363d842b7df4b46915d11a3fb09; 1.5B, d7372fd828518a4d38b1eb196c673c31a85f2ed302b3d1e406c4c2d1b64a0668. Exact prompt assembly, original examples, frozen tasks and calibration labels are retained in docs/PROMPTS.md and experiments/config.py. Detailed environment and safeguards are recorded in docs/analysis/P4_SETUP.md and docs/SAFETY.md.
 
 Study dependencies include NumPy 2.2.6, pandas 2.2.3, SciPy 1.15.3, Matplotlib 3.10.3 and psutil 7.0.0; tests use pytest 8.3.5 and Ruff 0.11.13. CodeCarbon 3.0.4 remains pinned for historical pilot reconstruction but is disabled in full-run scoring. PDF authoring uses a separate bundled runtime and does not change the study environment.
+
+
+---COMPARISON_SHEET---
+
+## Supplementary comparisons: single-page foldout
+
+The final landscape sheet contains 30 panels: success/failure, input/output tokens, token-energy associations, gross/net energy, tokens per correct, the three prompt categories, and P1/P3_3/P2. Every panel uses stage 1 only, with 40 attempts per model/arm; categories do not pool observations. Per-correct denominators count all successes and numerators include failed-attempt costs. Points and bars are descriptive means or ratios; paired uncertainty and energy-per-correct intervals appear in the main figures. Energy is HWiNFO CPU Package Power integrated over the approximate post-load window; net uses the 17.553 W starting idle baseline and all estimates carry drift flags. The large-format page is intended for digital zoom or large-format printing.

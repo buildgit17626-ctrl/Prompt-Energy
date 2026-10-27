@@ -5,21 +5,31 @@ output/pdf/P4_revised_manuscript.pdf. The historical P4_baseline_brief.pdf path
 now receives the same revised paper to prevent sharing the superseded headline.
 Earlier comparison graphics remain supplementary, not the revised main narrative.
 
-## Review map
+## Current packet and coverage
 
-1. Headline/lead: P1-P0, pages 1 and 4. P3-P0 is a composite comparison because
-   actual P3 wording adds following the example(s); the instruction is not identical.
-2. Cost-per-correct intervals: Figure 2, page 5; ratio_intervals.csv has all endpoints.
-3. Paired contrasts: Figure 1/page 4; paired_contrasts.csv includes discordances.
-4. Failure taxonomy: page 6; P4_FAILURE_REVIEW.csv contains 64 traceable annotations.
-   These are AI-assisted, not independently human-adjudicated. Owner review pending.
-5. Failed-attempt energy share: page 7; gross and net denominators both included.
-6. Computation explanation: page 9; token-generation steps, no extra-networks theory.
-7. Resolution selection bias and energy/token complement: page 7.
-8. Pilot repeat evidence: page 8; 159/160 pairs, separately labelled and not pooled.
-9. Baseline scenarios: page 8; saved window durations, registered/start plus post-hoc
-   midpoint/end assumptions. No raw energy or baseline was replaced.
-10. Three professor questions: page 9. Final author conclusion review: page 10.
+The PDF contains 12 A4 pages plus one A1 landscape comparison sheet. Main body,
+tables, captions and references use embedded Times New Roman at 14 pt; headings
+are larger, and page footers smaller. Continuous flow replaces artificial section
+page breaks. The final A1 page supports digital zoom and large-format printing.
+The owner's removed author-name line stays removed.
+
+- Figures 1-2: task-paired contrasts and energy-per-correct ratio intervals.
+- Figure 3: all-row machine failures and selected source-review mechanisms.
+- Figure 4: failed-attempt energy shares and energy/token complement.
+- Figure 5: registered start versus post-hoc end/midpoint baseline scenarios.
+- Section 9.1 (pages 10-11): the three categories and P1/P3_3/P2 interpretation.
+- Final sheet S1-S2: passed/failed bars for each model.
+- S3-S5: input by prompt and separate output-by-prompt model views.
+- S6-S11: input versus energy, success and output tokens for each model.
+- S12-S15: output versus mean net energy; gross/net energy versus prompt.
+- S16-S17: output tokens per correct solution for each model.
+- S18-S26: P0/P1/P5, P3_1/P3_3 and P2/P4 on output/energy/success.
+- S27-S30: P1/P3_3/P2 on output/energy and both per-correct ratios.
+- Section 10: three questions for professors; docs/outreach/PROFESSOR_EMAIL.md
+  supplies the local email draft. No email was sent.
+
+The charts retain separate arms, never pool category averages. All use stage 1.
+Source review annotations are AI-assisted and have no independent second annotator.
 
 All new comparisons were chosen after collection and are post hoc. The five
 contrasts must not be described as pre-registered. Original H1-H5 remain unchanged.
@@ -29,7 +39,9 @@ contrasts must not be described as pre-registered. Original H1-H5 remain unchang
 Run `.venv313/Scripts/python.exe -m analysis.review_revision` from the repository.
 It reads original P4/pilot data, validates the schedule and source hashes, and writes
 CSV/PNG/SVG evidence under results/p4-revision. No model calls or candidate execution.
-Use the separate bundled Python with ReportLab to run
+Then run `.venv313/Scripts/python.exe -m analysis.professor_figures` to
+validate the manuscript table/instructions and build the 30-panel sheet.
+Use the separate bundled Python with ReportLab and pypdf to run
 `-m analysis.build_manuscript` (or `-m analysis.build_brief` for the historical path).
 The PDF builder reads the owner's editable Markdown and the generated figures;
 it does not regenerate or overwrite the author's prose. Tables in the manuscript
@@ -51,4 +63,6 @@ in the selected sample; do not extrapolate zero to every generation.
   prevalence estimates. Truncation takes precedence even with a complete function.
 - End/midpoint baselines are constant alternatives, not a fitted drift correction.
 - Energy/token includes prompt and overhead cost; it cannot isolate decode energy.
-- The PDF remains a draft for owner interpretation and annotation approval.
+- The paper is prepared for research discussion; its limitations and AI-assisted
+  annotation provenance remain explicit. Numerical auditing is not independent
+  expert validation of the scientific conclusions.
