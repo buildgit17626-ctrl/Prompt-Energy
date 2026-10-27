@@ -1,5 +1,14 @@
 # SPEC: The cost of a correct answer
 
+Post-collection presentation note (2026-10-27): owner requested supplementary
+P4 figures and a combined expectations/observations review. These are descriptive
+views of the existing stage-1 data, not changes to H1-H5, scoring, grouping or
+exclusions. Presentation families P0/P1/P5, P3_1/P3_3 and P2/P4 show individual
+arms, not pooled estimates. Methods and pending-approval interpretation are in
+docs/analysis/P4_SETUP.md and docs/analysis/P4_EXPECTATIONS_OBSERVATIONS.md.
+No conclusion is accepted until the owner reviews it; the original brief remains
+unchanged. No new experiment or next milestone is authorized by this note.
+
 Working title: **Prompt design and the cost of a correct answer: tokens, estimated energy and verified yield in small-model code generation**
 
 ## 1. Research question

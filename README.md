@@ -286,3 +286,26 @@ solved/failed, and report actual group sizes as descriptive, noisy groups.
 
 Before tonight's main run, confirm with the owner that HWiNFO logging has begun
 and obtain the new CSV path. Calibration does not require that log.
+
+## Completed P4: additional comparison review
+
+The saved full run has 840 scored requests (560 stage 1, 280 stage 2).
+Regenerate the owner-requested supplementary views without model calls:
+
+```powershell
+.\.venv313\Scripts\python.exe -m analysis.comparisons
+```
+
+This requires the existing local results/p4-full, results/p4-analysis and
+results/p4-presentation evidence folders. Results are git-ignored and must be
+restored from a verified backup on a fresh checkout. Eight new PNG/SVG figures,
+summary CSVs, provenance and index.html are written to results/p4-comparisons.
+Existing broad figures are reused under its existing/ folder. Open index.html
+for the gallery. No scored data is changed; source and summary consistency are
+checked. The original PDF remains unchanged.
+
+Read [full setup](docs/analysis/P4_SETUP.md) and
+[expectations versus evidence](docs/analysis/P4_EXPECTATIONS_OBSERVATIONS.md).
+The latter includes candidate metric leaders, corrections, sensitivity caveats,
+and a future roadmap. Conclusions remain owner-review drafts until approved.
+These descriptive views do not change preregistered H1-H5 or start P5.
