@@ -462,3 +462,39 @@ Calibration evidence SHA-256:
 The main run remains unstarted. Before tonight's main execution, ask whether
 HWiNFO logging has begun and confirm the new CSV path; run the registered
 preflight and obtain main-block approval. Calibration does not grant that approval.
+
+
+## Post-collection manuscript amendment (2026-10-27)
+
+Owner requested a revised professor-facing experiment paper. This supersedes the
+presentation note's instruction to leave the old brief unchanged, not the original
+protocol. No new model calls, task exclusions or rescoring are authorized.
+
+Post-hoc analyses, chosen after results were available: five task-paired contrasts
+per model (P1-P0, P2-P1, P4-P1, P3_1-P0, P5-P1), task-bootstrap ratio intervals
+for total energy / total correct, failed-attempt energy shares, energy / generated
+token, and alternate constant end/midpoint baselines. Use 2,000 draws, seed 1729,
+95% percentile intervals; paired contrasts align tasks and resample whole pairs.
+Intervals are pointwise, not multiplicity-adjusted, and do not capture systematic
+baseline error. Report discordant pass counts and do not claim equivalence from
+an interval containing zero. Zero-success bootstrap draws are counted explicitly;
+if any occur, mark the ratio interval unavailable rather than drop draws.
+
+P1-P0 is the lead contrast. P3-P0 is an example-guided prompt comparison: exact
+wording also changes to following the example(s), so it does not isolate examples.
+Stage 1 alone supplies the primary descriptive results. Stage-2 repeats remain
+separate; add pilot repeat diagnostics (not hypothesis evidence) without pooling.
+
+Use saved post-load window seconds for end and midpoint baseline scenarios;
+keep registered start-baseline estimates and all raw files unchanged. Endpoint
+scenarios cannot reveal or correct the baseline trajectory. Low-resolution
+exclusion is duration-dependent selection, disproportionately removing cheap
+requests; energy per token is a complement, not a repair or decode-phase estimate.
+
+Review 64 selected stage-1 failures: first three failures by run ID per model/arm,
+plus all cap/no-code cases and all NameError/timeout cases. An AI-assisted source
+review is not independent human adjudication; owner review remains pending.
+Record categories and concrete evidence in P4_FAILURE_REVIEW.csv, distinguish
+all-row machine labels from sample mechanisms, and never infer sample prevalence.
+No fixed scoring/extraction rule or saved outcome changes. Draft conclusions
+remain subject to final author review before external sharing.
