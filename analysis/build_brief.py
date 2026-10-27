@@ -7,7 +7,7 @@ from analysis.build_manuscript import build
 
 
 def main() -> None:
-    """Render the current owner-review manuscript at the historical brief path."""
+    """Render the current manuscript at the historical brief path."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, default=Path("docs/analysis/P4_MANUSCRIPT.md"))
     parser.add_argument("--output", type=Path, default=Path("output/pdf/P4_baseline_brief.pdf"))

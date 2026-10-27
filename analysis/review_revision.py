@@ -303,6 +303,15 @@ def main() -> None:
     if len(stage) != 560 or not stage.groupby(["model", "prompt_id"]).size().eq(40).all():
         raise ValueError("Require complete stage 1")
     OUT.mkdir(parents=True, exist_ok=True)
+    plt.rcParams.update(
+        {
+            "font.family": "Times New Roman",
+            "font.size": 11,
+            "axes.titlesize": 12,
+            "axes.labelsize": 11,
+            "svg.fonttype": "none",
+        }
+    )
     contrasts = []
     ratios = []
     metrics = []

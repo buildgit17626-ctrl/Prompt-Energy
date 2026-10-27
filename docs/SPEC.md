@@ -498,3 +498,17 @@ Record categories and concrete evidence in P4_FAILURE_REVIEW.csv, distinguish
 all-row machine labels from sample mechanisms, and never infer sample prevalence.
 No fixed scoring/extraction rule or saved outcome changes. Draft conclusions
 remain subject to final author review before external sharing.
+
+
+## Professor packet formatting amendment (2026-10-27)
+
+Owner requests external-facing presentation with 14-point Times New Roman body,
+continuous page flow, explicit comparisons within P0/P1/P5, P3_1/P3_3 and P2/P4,
+and P1/P3_3/P2 across output, energy and per-correct metrics. Existing categories
+organize separate arms; no pooled category estimates or new treatment definitions.
+Missing requested views appear once in a single large-format landscape final
+comparison sheet (30 panels). Chart captions retain measurement mode, stage,
+denominators and drift caveat. This changes presentation, not design or outcomes.
+The owner's removal of the author line is preserved. AI-assisted annotation
+provenance remains explicit; no independent human second review is implied.
+An outreach email draft is local only. No sending or new generation authorized.

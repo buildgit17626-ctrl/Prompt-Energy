@@ -12,6 +12,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Image,
+    KeepTogether,
     PageBreak,
     Paragraph,
     SimpleDocTemplate,
@@ -28,7 +29,14 @@ def build(source: Path, output: Path) -> None:
         pdfmetrics.registerFont(TTFont(name, str(fonts / file)))
     pdfmetrics.registerFontFamily("Paper", normal="Paper", bold="PaperBold", italic="Paper")
     body = ParagraphStyle(
-        "Body", fontName="Paper", fontSize=10.5, leading=13.4, spaceAfter=8, splitLongWords=True
+        "Body",
+        fontName="Paper",
+        fontSize=14,
+        leading=16.5,
+        spaceAfter=6,
+        splitLongWords=True,
+        allowWidows=0,
+        allowOrphans=0,
     )
     title = ParagraphStyle(
         "Title", parent=body, fontName="PaperBold", fontSize=21, leading=24, spaceAfter=12
@@ -37,17 +45,19 @@ def build(source: Path, output: Path) -> None:
         "Heading",
         parent=body,
         fontName="PaperBold",
-        fontSize=13,
-        leading=16,
+        fontSize=17,
+        leading=20,
         spaceBefore=7,
         spaceAfter=8,
         keepWithNext=True,
     )
-    small = ParagraphStyle("Small", parent=body, fontSize=8.6, leading=10.5, spaceAfter=6)
-    cell = ParagraphStyle("Cell", parent=small, fontSize=8.3, leading=10)
-    width = A4[0] - 84
+    small = ParagraphStyle("Small", parent=body, fontSize=14, leading=16.5, spaceAfter=6)
+    cell = ParagraphStyle("Cell", parent=small, fontSize=14, leading=16)
+    width = A4[0] - 68
     story = []
-    lines = source.read_text(encoding="utf-8").splitlines()
+    text = source.read_text(encoding="utf-8")
+    main_text = text.split("---COMPARISON_SHEET---")[0]
+    lines = main_text.splitlines()
     i = 0
     while i < len(lines):
         line = lines[i].strip()
@@ -64,7 +74,18 @@ def build(source: Path, output: Path) -> None:
             figure = Image(str(path))
             figure.drawHeight *= width / figure.drawWidth
             figure.drawWidth = width
-            story.extend([figure, Spacer(1, 5)])
+            caption_index = i + 1
+            while caption_index < len(lines) and not lines[caption_index].strip():
+                caption_index += 1
+            if caption_index < len(lines) and lines[caption_index].startswith("Figure "):
+                story.append(
+                    KeepTogether(
+                        [figure, Spacer(1, 5), Paragraph(escape(lines[caption_index]), small)]
+                    )
+                )
+                i = caption_index
+            else:
+                story.extend([figure, Spacer(1, 5)])
         elif line.startswith("|"):
             rows = []
             while i < len(lines) and lines[i].strip().startswith("|"):
@@ -107,14 +128,14 @@ def build(source: Path, output: Path) -> None:
         i += 1
     output.parent.mkdir(parents=True, exist_ok=True)
     doc = SimpleDocTemplate(
-        str(output),
+        str(output.with_suffix(".body.pdf")),
         pagesize=A4,
-        leftMargin=42,
-        rightMargin=42,
-        topMargin=35,
-        bottomMargin=38,
+        leftMargin=34,
+        rightMargin=34,
+        topMargin=30,
+        bottomMargin=32,
         title="Explicit code-only instructions and the energy cost of correct code",
-        author="Dhruv Brahmbhatt",
+        author="",
     )
 
     def footer(canvas, document) -> None:
@@ -122,12 +143,51 @@ def build(source: Path, output: Path) -> None:
         canvas.setFont("Paper", 8)
         canvas.setFillColor(colors.HexColor("#555555"))
         canvas.drawString(
-            42, 21, "Prompt-energy experiment | Author-review draft | 27 October 2026"
+            34, 17, "Prompt-energy experiment | Research discussion | 27 October 2026"
         )
-        canvas.drawRightString(A4[0] - 42, 21, str(document.page))
+        canvas.drawRightString(A4[0] - 34, 17, str(document.page))
         canvas.restoreState()
 
     doc.build(story, onFirstPage=footer, onLaterPages=footer)
+    # Keep the 30-panel comparison on a single native-size page, with readable labels.
+    from io import BytesIO
+
+    from pypdf import PdfReader, PdfWriter
+    from reportlab.lib.pagesizes import A1, landscape
+    from reportlab.pdfgen.canvas import Canvas
+
+    sheet = BytesIO()
+    size = landscape(A1)
+    canvas = Canvas(sheet, pagesize=size)
+    canvas.setTitle("Supplementary prompt-category comparisons")
+    image = Image(str(Path("results/p4-professor/comparison_sheet.png")))
+    available_width = size[0] - 64
+    height = image.imageHeight * available_width / image.imageWidth
+    canvas.drawImage(
+        str(Path("results/p4-professor/comparison_sheet.png")),
+        32,
+        size[1] - height - 28,
+        width=available_width,
+        height=height,
+    )
+    canvas.setFont("Paper", 14)
+    canvas.drawString(32, 24, "Supplementary comparison sheet | Stage 1 | 27 October 2026")
+    canvas.drawRightString(size[0] - 32, 24, "Single-page large-format appendix")
+    canvas.showPage()
+    canvas.save()
+    sheet.seek(0)
+    writer = PdfWriter()
+    writer.append(PdfReader(output.with_suffix(".body.pdf")))
+    writer.append(PdfReader(sheet))
+    writer.add_metadata(
+        {
+            "/Title": "Explicit code-only instructions and the energy cost of correct code",
+            "/Subject": "CPU experiment with supplementary category comparisons",
+        }
+    )
+    with output.open("wb") as stream:
+        writer.write(stream)
+    output.with_suffix(".body.pdf").unlink()
 
 
 def main() -> None:
