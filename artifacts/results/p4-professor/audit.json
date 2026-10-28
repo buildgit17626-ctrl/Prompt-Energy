@@ -1,0 +1,11 @@
+{
+  "stage_1_rows": 560,
+  "stage_2_rows": 280,
+  "stage_1_successes": 347,
+  "reviewed_response_hashes": 64,
+  "validated_paired_contrasts": 10,
+  "raw_sources_unchanged": true,
+  "summaries_match_registered": true,
+  "manuscript_summary_rows_checked": 14,
+  "exact_instructions_checked": 7
+}

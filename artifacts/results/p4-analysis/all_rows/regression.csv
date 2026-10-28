@@ -1,0 +1,5 @@
+model,energy_column,n,status,intercept,input_token_coefficient,output_token_coefficient,r_squared,tool_mode
+qwen2.5-coder:0.5b,cpu_pkg_energy_wh,280,ok,-0.002852786759476758,2.725757125889472e-05,0.00010812193016810171,0.9743374947260781,HWiNFO CPU Package Power; trapezoidal; approximate post-load gross/net
+qwen2.5-coder:0.5b,cpu_pkg_post_load_raw_wh,280,ok,-0.005590931909237639,5.6983074928975764e-05,0.0002002520312309299,0.9819334353108137,HWiNFO CPU Package Power; trapezoidal; approximate post-load gross/net
+qwen2.5-coder:1.5b,cpu_pkg_energy_wh,280,ok,0.0017615073599441793,3.001273460031688e-05,0.00024433173404511774,0.9934928663844209,HWiNFO CPU Package Power; trapezoidal; approximate post-load gross/net
+qwen2.5-coder:1.5b,cpu_pkg_post_load_raw_wh,280,ok,0.00025612995442228915,6.57926054111604e-05,0.0004580016939882102,0.9959666336012772,HWiNFO CPU Package Power; trapezoidal; approximate post-load gross/net

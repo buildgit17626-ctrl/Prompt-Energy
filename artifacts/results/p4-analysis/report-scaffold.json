@@ -1,0 +1,48 @@
+{
+  "tool_mode": "HWiNFO CPU Package Power; trapezoidal; approximate post-load gross/net",
+  "analysis_settings": {
+    "seed": 1729,
+    "bootstrap_draws": 2000,
+    "confidence": 0.95
+  },
+  "source_sha256": "b426f6bb5e79af91e437623e6692b9b2f41efc7aad7faec99ef50f81dba6e0e0",
+  "record_kind": "full",
+  "stage1_rows": 560,
+  "stage2_rows": 280,
+  "planned_stage1_rows": 560,
+  "interpretation": "OWNER TO WRITE; partial batches are provisional",
+  "limitations": [
+    "No input/output phase-energy attribution; pilot prompt windows low resolution.",
+    "CodeCarbon constant-power estimate was unsuitable and is absent from scored runs.",
+    "Estimated CPU package energy, approximate post-load boundary, one machine.",
+    "Missing energy is not zero; negative net energy retained; failures included.",
+    "Benchmark contamination possible; repeats include output variability."
+  ],
+  "all_rows": {
+    "rows": 560,
+    "energy_available": 560,
+    "grouping": {
+      "calibration": "frozen labels; P0 excluded",
+      "reference_length": "frozen labels; P0 excluded"
+    }
+  },
+  "without_primary_low_resolution": {
+    "rows": 490,
+    "energy_available": 490,
+    "grouping": {
+      "calibration": "frozen labels; P0 excluded",
+      "reference_length": "frozen labels; P0 excluded"
+    }
+  },
+  "baseline_flag_counts": {
+    "baseline_drift": 582,
+    "end_baseline_missing": 148,
+    "post_load:low_resolution": 102,
+    "post_load:sensor_gap": 99,
+    "total:sensor_gap": 99,
+    "": 88,
+    "total:low_resolution": 14,
+    "post_load:negative_adjusted_energy": 8,
+    "total:negative_adjusted_energy": 8
+  }
+}

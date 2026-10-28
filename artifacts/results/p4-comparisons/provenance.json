@@ -1,0 +1,47 @@
+{
+  "source_sha256": "b426f6bb5e79af91e437623e6692b9b2f41efc7aad7faec99ef50f81dba6e0e0",
+  "quality": {
+    "1": {
+      "rows": 560,
+      "passed": 347,
+      "energy_available": 560,
+      "low_resolution": 70,
+      "baseline_drift": 560,
+      "missing_end_baseline": 0
+    },
+    "2": {
+      "rows": 280,
+      "passed": 224,
+      "energy_available": 181,
+      "low_resolution": 32,
+      "baseline_drift": 22,
+      "missing_end_baseline": 148
+    }
+  },
+  "complete_energy_pairs": 64,
+  "planned_energy_pairs": 140,
+  "model_pair_outcomes": {
+    "only_0.5b_passed": 21,
+    "only_1.5b_passed": 60,
+    "both_passed": 133,
+    "both_failed": 66
+  },
+  "generation_commit": "041f169",
+  "scope": "Completed P4 baseline experiment; descriptive review draft",
+  "families": {
+    "Task-completion instructions": [
+      "P0",
+      "P1",
+      "P5"
+    ],
+    "Example-guided generation": [
+      "P3_1",
+      "P3_3"
+    ],
+    "Explanation / step-by-step requests": [
+      "P2",
+      "P4"
+    ]
+  },
+  "interpretation_status": "Owner approval required; descriptive review only"
+}

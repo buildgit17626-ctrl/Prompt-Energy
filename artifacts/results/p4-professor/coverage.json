@@ -1,0 +1,122 @@
+[
+  {
+    "panel": "S1",
+    "title": "0.5b: success and failure"
+  },
+  {
+    "panel": "S2",
+    "title": "1.5b: success and failure"
+  },
+  {
+    "panel": "S3",
+    "title": "Input tokens by prompt"
+  },
+  {
+    "panel": "S4",
+    "title": "0.5b: output tokens by prompt"
+  },
+  {
+    "panel": "S5",
+    "title": "1.5b: output tokens by prompt"
+  },
+  {
+    "panel": "S6",
+    "title": "0.5b: Net energy (mWh)\nversus input tokens"
+  },
+  {
+    "panel": "S7",
+    "title": "1.5b: Net energy (mWh)\nversus input tokens"
+  },
+  {
+    "panel": "S8",
+    "title": "0.5b: Success rate (%)\nversus input tokens"
+  },
+  {
+    "panel": "S9",
+    "title": "1.5b: Success rate (%)\nversus input tokens"
+  },
+  {
+    "panel": "S10",
+    "title": "0.5b: Output tokens\nversus input tokens"
+  },
+  {
+    "panel": "S11",
+    "title": "1.5b: Output tokens\nversus input tokens"
+  },
+  {
+    "panel": "S12",
+    "title": "0.5b: Net energy (mWh)\nversus output tokens"
+  },
+  {
+    "panel": "S13",
+    "title": "1.5b: Net energy (mWh)\nversus output tokens"
+  },
+  {
+    "panel": "S14",
+    "title": "0.5b: gross and net energy"
+  },
+  {
+    "panel": "S15",
+    "title": "1.5b: gross and net energy"
+  },
+  {
+    "panel": "S16",
+    "title": "0.5b: output tokens per correct"
+  },
+  {
+    "panel": "S17",
+    "title": "1.5b: output tokens per correct"
+  },
+  {
+    "panel": "S18",
+    "title": "A: instruction + generation\nOutput tokens / attempt"
+  },
+  {
+    "panel": "S19",
+    "title": "A: instruction + generation\nNet mWh / attempt"
+  },
+  {
+    "panel": "S20",
+    "title": "A: instruction + generation\nSuccess rate (%)"
+  },
+  {
+    "panel": "S21",
+    "title": "B: examples + generation\nOutput tokens / attempt"
+  },
+  {
+    "panel": "S22",
+    "title": "B: examples + generation\nNet mWh / attempt"
+  },
+  {
+    "panel": "S23",
+    "title": "B: examples + generation\nSuccess rate (%)"
+  },
+  {
+    "panel": "S24",
+    "title": "C: explanation + generation\nOutput tokens / attempt"
+  },
+  {
+    "panel": "S25",
+    "title": "C: explanation + generation\nNet mWh / attempt"
+  },
+  {
+    "panel": "S26",
+    "title": "C: explanation + generation\nSuccess rate (%)"
+  },
+  {
+    "panel": "S27",
+    "title": "P1 / P3_3 / P2\nOutput tokens / attempt"
+  },
+  {
+    "panel": "S28",
+    "title": "P1 / P3_3 / P2\nNet mWh / attempt"
+  },
+  {
+    "panel": "S29",
+    "title": "P1 / P3_3 / P2\nNet mWh / correct"
+  },
+  {
+    "panel": "S30",
+    "title": "P1 / P3_3 / P2\nOutput tokens / correct"
+  }
+]

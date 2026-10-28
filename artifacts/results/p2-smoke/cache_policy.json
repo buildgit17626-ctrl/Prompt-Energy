@@ -1,0 +1,56 @@
+{
+  "keep_alive": 0,
+  "observations": [
+    {
+      "model": "qwen2.5-coder:0.5b",
+      "prompt_eval_count": [
+        145,
+        145
+      ],
+      "prompt_eval_duration": [
+        465803000,
+        14990000
+      ],
+      "request_ids": [
+        "probe/qwen2.5-coder:0.5b/0",
+        "probe/qwen2.5-coder:0.5b/1"
+      ],
+      "reuse_signal": true,
+      "text_identical": false
+    },
+    {
+      "model": "qwen2.5-coder:1.5b",
+      "prompt_eval_count": [
+        145,
+        145
+      ],
+      "prompt_eval_duration": [
+        886607000,
+        62011000
+      ],
+      "request_ids": [
+        "probe/qwen2.5-coder:1.5b/0",
+        "probe/qwen2.5-coder:1.5b/1"
+      ],
+      "reuse_signal": true,
+      "text_identical": false
+    }
+  ],
+  "registered_rule": {
+    "compare_fields": [
+      "response",
+      "prompt_eval_count",
+      "prompt_eval_duration"
+    ],
+    "freeze_decision_before_smoke": true,
+    "invalid_probe": "stop_before_scored_generation",
+    "on_reuse_keep_alive": 0,
+    "otherwise_keep_alive": -1,
+    "probe_keep_alive": -1,
+    "probe_requests": 2,
+    "reuse_signal": "second_count_lt_first_or_second_duration_lt_first",
+    "scope": "all_scored_runs_if_any_model_signals_reuse",
+    "verify_unloaded_before_scored_if_zero": true
+  },
+  "resolved_at": "2026-10-19T17:43:14.278914+00:00"
+}

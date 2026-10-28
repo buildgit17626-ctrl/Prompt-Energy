@@ -19,6 +19,8 @@ task comparisons. All stage-1 energy estimates have baseline drift; 70 have
 short measurement windows. Stage 2 has 99 missing energy estimates. CPU package
 energy is an estimate, not whole-device electricity, battery use or carbon.
 This is a student experiment report, not a claim of a general benchmark.
+Publication validation on Python 3.13.7: **346 tests passed; Ruff clean**.
+The test run reported 14 third-party deprecation warnings.
 
 The public export retains failures and missing values. Local account paths are
 redacted in metadata; exact saved HTTP response bodies are preserved. Original

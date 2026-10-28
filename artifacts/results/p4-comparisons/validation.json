@@ -1,0 +1,26 @@
+{
+  "code_commit": "4eb9905c64eb1f0768115eaf4ddf472e7887f0a9",
+  "python": "3.13.7",
+  "tests_passed": 337,
+  "third_party_deprecation_warnings": 14,
+  "ruff_errors": 0,
+  "format_checked_python_files": 47,
+  "source_evidence_hashes_unchanged": {
+    "blocks.jsonl": "dc6340a554265365124b8c3d25841f03583474ced297a6a9ea01d480e53320bc",
+    "full.csv": "b426f6bb5e79af91e437623e6692b9b2f41efc7aad7faec99ef50f81dba6e0e0",
+    "manifest.json": "835fea3f6bdad462f2618140981ec481d2ccbb85bfa63786b5c37e004efaabc9",
+    "measurements.jsonl": "cf85e076c6d6a1931979c943b3bb15f106db27208c1e2d1d5b287de824646dd8",
+    "raw.jsonl": "90d73edb545cc0142c5745aa1c0de981b3ca95b52f86e99a818cf5870b91f1fe",
+    "requests.jsonl": "fb6d43bc1492f88264cf73962154ea6e505ea33522387c6456d12621e39463cb",
+    "results.jsonl": "5b2d18c25b723b4cd24f75fe359c76f0a78d78975b5d98c26b4aff04c58a4971",
+    "sessions.jsonl": "82bc24bd440028adaaae26797ad2a787336131087d597380276e0965bcff5a48",
+    "sensors\\44ef2686a4144d3bbb66d477e5b54002.csv": "10a09f5d1c0a692885d8021378a4fb5d8ad89a3ee2707a686fd2fc3a62b23533",
+    "sensors\\54cb6d2da87e479795bc4272837ce82e.csv": "d9c45f478e96278c605e1e9686d2ddc1771dddf23f38d6677177e098e01ee89f",
+    "sensors\\b299568aba2640df8f2380145152006c.csv": "5bd05d5b59c00a6c24a9b85897744764010dd4fed667e31f6f7676521a8d34a6",
+    "sensors\\be04bb3399f248ee8dc0c636b71c7709.csv": "d6c99abf110ba147b2c57ba9dc006c94373d23fb84f201766ececc679e7ef824"
+  },
+  "new_figures": 8,
+  "reused_figures": 3,
+  "visual_review": "All new figures inspected",
+  "conclusion_status": "OWNER APPROVAL PENDING"
+}

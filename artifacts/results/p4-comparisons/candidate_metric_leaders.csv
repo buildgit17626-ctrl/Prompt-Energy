@@ -1,0 +1,17 @@
+model,metric,arms,value,unit,status
+qwen2.5-coder:0.5b,Success rate,"P0, P1",60.0,%,OWNER REVIEW PENDING
+qwen2.5-coder:0.5b,Input tokens / attempt,P0,162.05,tokens,OWNER REVIEW PENDING
+qwen2.5-coder:0.5b,Output tokens / attempt,P3_3,194.225,tokens,OWNER REVIEW PENDING
+qwen2.5-coder:0.5b,Net energy / attempt,P3_3,25.180703519306885,mWh,OWNER REVIEW PENDING
+qwen2.5-coder:0.5b,Gross energy / attempt,P3_3,48.67844126373455,mWh,OWNER REVIEW PENDING
+qwen2.5-coder:0.5b,Net energy / correct,P1,44.34251189445619,mWh,OWNER REVIEW PENDING
+qwen2.5-coder:0.5b,Gross energy / correct,P1,82.90596000036112,mWh,OWNER REVIEW PENDING
+qwen2.5-coder:0.5b,Output tokens / correct,P1,379.1666666666667,tokens,OWNER REVIEW PENDING
+qwen2.5-coder:1.5b,Success rate,P3_1,75.0,%,OWNER REVIEW PENDING
+qwen2.5-coder:1.5b,Input tokens / attempt,P0,162.05,tokens,OWNER REVIEW PENDING
+qwen2.5-coder:1.5b,Output tokens / attempt,P1,71.1,tokens,OWNER REVIEW PENDING
+qwen2.5-coder:1.5b,Net energy / attempt,P1,23.58502693877076,mWh,OWNER REVIEW PENDING
+qwen2.5-coder:1.5b,Gross energy / attempt,P1,43.592100618438025,mWh,OWNER REVIEW PENDING
+qwen2.5-coder:1.5b,Net energy / correct,P1,32.53107163968381,mWh,OWNER REVIEW PENDING
+qwen2.5-coder:1.5b,Gross energy / correct,P1,60.12703533577658,mWh,OWNER REVIEW PENDING
+qwen2.5-coder:1.5b,Output tokens / correct,P1,98.06896551724138,tokens,OWNER REVIEW PENDING

@@ -1,0 +1,14 @@
+{
+  "post_hoc": true,
+  "seed": 1729,
+  "draws": 2000,
+  "source_sha256": {
+    "results\\p4-full\\full.csv": "b426f6bb5e79af91e437623e6692b9b2f41efc7aad7faec99ef50f81dba6e0e0",
+    "results\\p4-full\\raw.jsonl": "90d73edb545cc0142c5745aa1c0de981b3ca95b52f86e99a818cf5870b91f1fe",
+    "results\\p4-full\\results.jsonl": "5b2d18c25b723b4cd24f75fe359c76f0a78d78975b5d98c26b4aff04c58a4971",
+    "results\\p4-full\\measurements.jsonl": "cf85e076c6d6a1931979c943b3bb15f106db27208c1e2d1d5b287de824646dd8",
+    "results\\p4-full\\manifest.json": "835fea3f6bdad462f2618140981ec481d2ccbb85bfa63786b5c37e004efaabc9",
+    "results\\p3-pilot-2026-10-20\\energy.csv": "40547115bfe867fbf33d7e7cc821973977f21c92ed3b89f71d8f16185a323fc0"
+  },
+  "reviewed_failures": 64
+}
