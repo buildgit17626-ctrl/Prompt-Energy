@@ -1,5 +1,13 @@
 # SPEC: The cost of a correct answer
 
+Publication follow-up (2026-10-28): owner authorizes pushing necessary study
+materials to the existing GitHub repository and making it public. The
+`artifacts/` export includes reports, all 840 scored rows, saved response bodies,
+redacted metadata, selected CPU package power readings and supporting analyses.
+Original local journals remain unchanged. Source/export hashes distinguish
+redaction and reduced telemetry from originals; exports are not inference-resume
+archives. No new generation, rescoring, hypothesis or interpretation is added.
+
 Post-collection presentation note (2026-10-27): owner requested supplementary
 P4 figures and a combined expectations/observations review. These are descriptive
 views of the existing stage-1 data, not changes to H1-H5, scoring, grouping or

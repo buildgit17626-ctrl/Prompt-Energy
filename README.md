@@ -1,9 +1,46 @@
-# Prompt design and the cost of a correct answer
+# Report and code: Prompt design and the energy cost of correct code
+
+A small exploratory experiment on prompt design, correctness, tokens, latency
+and estimated CPU package energy on one consumer laptop. It compares seven
+prompt arms using Qwen2.5-Coder 0.5B and 1.5B on 40 HumanEval tasks.
+
+## Read the findings and inspect the evidence
+
+- [Two-page summary](artifacts/reports/P4_two_page_summary.pdf)
+- [Full report and comparison sheet](artifacts/reports/P4_baseline_brief.pdf)
+- [All 840 request rows](artifacts/results/p4-full/full.csv)
+- [Figures, tables and saved responses](artifacts/README.md)
+- [Exact prompts](docs/PROMPTS.md), [setup](docs/analysis/P4_SETUP.md),
+  [safety limits](docs/SAFETY.md), [sources and third-party licences](docs/REFERENCES.md)
+
+Stage 1 (560 requests) supplies the main comparisons; stage 2 (280 requests)
+supplies separate repeat diagnostics. They must not be pooled as 840 independent
+task comparisons. All stage-1 energy estimates have baseline drift; 70 have
+short measurement windows. Stage 2 has 99 missing energy estimates. CPU package
+energy is an estimate, not whole-device electricity, battery use or carbon.
+This is a student experiment report, not a claim of a general benchmark.
+
+The public export retains failures and missing values. Local account paths are
+redacted in metadata; exact saved HTTP response bodies are preserved. Original
+local journals are unchanged. See the export provenance for both source and
+public-file checksums. No model weights, environments or HWiNFO binary are shipped.
+No new software licence is assigned to original project material by publication;
+third-party material remains subject to its retained notices.
+
+Offline analysis of the public main data (no Ollama or HWiNFO required):
+
+```powershell
+.\.venv313\Scripts\python.exe -m analysis.full_analysis --run artifacts/results/p4-full --output results/public-analysis
+```
+
+The following sections document the harness and historical execution workflow.
+The full P4 run is complete; live commands below describe reproduction and must
+use a new output folder, never overwrite the accepted evidence.
 
 P1 provides a fixed 40-task HumanEval subset and a Windows restricted-subprocess
 correctness runner. Read docs/SPEC.md and docs/SAFETY.md before using it.
 P2 adds local Ollama inference, exact prompt assembly and auditable result logging.
-The owner writes the research analysis. No energy measurement or full study has run.
+The owner develops the research interpretation; AI assistance is disclosed in the report.
 
 ## Setup (PowerShell, Windows, Python 3.13 64-bit)
 
@@ -162,7 +199,8 @@ Its recorded parser option is `--encoding cp1252`, and HWiNFO version is
 .\.venv313\Scripts\python.exe -m experiments.run_p3 report --output results/p3-pilot-2026-10-20
 ```
 
-No full run (P4) has been started or authorized by completing this pilot.
+Pilot acceptance alone did not authorize the later full run. P4 subsequently
+completed; see the public evidence above.
 
 ## Post-pilot diagnostic figure
 
@@ -173,7 +211,7 @@ in config disables phase energy and CodeCarbon, with a primary-resolution
 sensitivity analysis. This does not start or authorize P4.
 
 
-## P4 overnight guide: implementation only, full run awaits approval
+## P4 overnight guide: historical run procedure
 
 P3 is accepted. P4's registered schedule is 840 scored requests: 560 on all
 40 tasks once, then 280 extra repeats on the seeded 10-task subset. The change
@@ -284,7 +322,7 @@ labels command remains available for auditing complete original evidence.
 A separate calibration is not proof of statistical independence; use the labels
 solved/failed, and report actual group sizes as descriptive, noisy groups.
 
-Before tonight's main run, confirm with the owner that HWiNFO logging has begun
+Before any new approved main run, confirm with the owner that HWiNFO logging has begun
 and obtain the new CSV path. Calibration does not require that log.
 
 ## Completed P4: additional comparison review
@@ -309,3 +347,5 @@ Read [full setup](docs/analysis/P4_SETUP.md) and
 The latter includes candidate metric leaders, corrections, sensitivity caveats,
 and a future roadmap. Conclusions remain owner-review drafts until approved.
 These descriptive views do not change preregistered H1-H5 or start P5.
+The current public report incorporates the owner's subsequent wording and review
+changes; older review documents preserve the history of proposed interpretations.
