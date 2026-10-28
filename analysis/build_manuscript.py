@@ -22,7 +22,7 @@ from reportlab.platypus import (
 )
 
 
-def build(source: Path, output: Path) -> None:
+def build(source: Path, output: Path, *, append_comparisons: bool = True) -> None:
     """Render paragraphs, tables and figures without recalculating study outcomes."""
     fonts = Path("C:/Windows/Fonts")
     for name, file in [("Paper", "times.ttf"), ("PaperBold", "timesbd.ttf")]:
@@ -56,6 +56,7 @@ def build(source: Path, output: Path) -> None:
     width = A4[0] - 68
     story = []
     text = source.read_text(encoding="utf-8")
+    document_title = next(line[2:].strip() for line in text.splitlines() if line.startswith("# "))
     main_text = text.split("---COMPARISON_SHEET---")[0]
     lines = main_text.splitlines()
     i = 0
@@ -134,7 +135,7 @@ def build(source: Path, output: Path) -> None:
         rightMargin=34,
         topMargin=30,
         bottomMargin=32,
-        title="Explicit code-only instructions and the energy cost of correct code",
+        title=document_title,
         author="",
     )
 
@@ -142,13 +143,14 @@ def build(source: Path, output: Path) -> None:
         canvas.saveState()
         canvas.setFont("Paper", 8)
         canvas.setFillColor(colors.HexColor("#555555"))
-        canvas.drawString(
-            34, 17, "Prompt-energy experiment | Research discussion | 27 October 2026"
-        )
+        canvas.drawString(34, 17, "Prompt-energy report | 28 October 2026")
         canvas.drawRightString(A4[0] - 34, 17, str(document.page))
         canvas.restoreState()
 
     doc.build(story, onFirstPage=footer, onLaterPages=footer)
+    if not append_comparisons:
+        output.with_suffix(".body.pdf").replace(output)
+        return
     # Keep the 30-panel comparison on a single native-size page, with readable labels.
     from io import BytesIO
 
@@ -171,7 +173,7 @@ def build(source: Path, output: Path) -> None:
         height=height,
     )
     canvas.setFont("Paper", 14)
-    canvas.drawString(32, 24, "Supplementary comparison sheet | Stage 1 | 27 October 2026")
+    canvas.drawString(32, 24, "Supplementary comparison sheet | Stage 1 | 28 October 2026")
     canvas.drawRightString(size[0] - 32, 24, "Single-page large-format appendix")
     canvas.showPage()
     canvas.save()
@@ -181,7 +183,7 @@ def build(source: Path, output: Path) -> None:
     writer.append(PdfReader(sheet))
     writer.add_metadata(
         {
-            "/Title": "Explicit code-only instructions and the energy cost of correct code",
+            "/Title": document_title,
             "/Subject": "CPU experiment with supplementary category comparisons",
         }
     )
@@ -194,8 +196,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, default=Path("docs/analysis/P4_MANUSCRIPT.md"))
     parser.add_argument("--output", type=Path, default=Path("output/pdf/P4_revised_manuscript.pdf"))
+    parser.add_argument("--no-comparison-sheet", action="store_true")
     args = parser.parse_args()
-    build(args.source, args.output)
+    build(args.source, args.output, append_comparisons=not args.no_comparison_sheet)
     print(args.output.resolve())
 
 

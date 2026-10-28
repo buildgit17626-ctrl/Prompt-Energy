@@ -1,8 +1,8 @@
-# Explicit code-only instructions and the energy cost of correct code
+# Report and code: Prompt design and the energy cost of correct code
 
 A consumer-CPU experiment with two small Qwen2.5-Coder models
 
-Research discussion paper | 27 October 2026
+Research report | Revised 28 October 2026
 
 ## Why this experiment matters
 
@@ -12,7 +12,7 @@ This report takes a small first step: 40 programming tasks, seven prompt variant
 
 ## Abstract
 
-We examine how seven prompt variants relate to output length, test success and estimated CPU package energy for local code generation. Two quantized Qwen2.5-Coder models (0.5B and 1.5B) completed the same 40 HumanEval tasks, producing 560 stage-1 requests. A separate 280-request stage supplied repeat diagnostics. Adding “Return only code” to the minimal instruction reduced mean net post-load energy from 52.65 to 26.61 mWh for 0.5B and from 89.06 to 23.59 mWh for 1.5B. Pass counts were 24 versus 24 and 29 versus 26, respectively; paired accuracy intervals include zero and do not establish equivalence. Explanation and step-by-step instructions generated substantially longer responses without higher aggregate pass counts than code-only P1. We report task-paired contrasts, bootstrap energy-per-correct intervals, and an audit of 64 selected failures. All stage-1 energy estimates carry baseline-drift flags, and the registered low-resolution exclusion disproportionately removes short requests. These findings describe one machine and two models; they motivate tighter measurement and controlled prompt studies rather than a universal prompting recommendation.
+We ran this experiment to find out how much a prompt can change the cost of getting correct code from a small local model. We used seven prompt variants on the same 40 HumanEval tasks with Qwen2.5-Coder 0.5B and 1.5B, giving 560 main responses and 280 additional responses for repeat checks. Asking for explanations produced longer answers and higher estimated energy use, but did not improve the overall pass count compared with the short code-only instruction. Examples gave mixed results: three examples reduced output length compared with one example, yet passed two fewer tasks on each model. We also found that the cheapest response was not always the cheapest route to a correct answer. These are observations from one laptop and two small models. All main-run energy estimates were affected by idle-baseline drift, and accuracy differences remain uncertain. The report therefore provides a starting point for further experiments rather than a general rule about the best prompt.
 
 ## 1. Motivation and related work
 
@@ -20,7 +20,7 @@ For a local user, an answer consumes time, memory and computation whether or not
 
 Green AI argues that efficiency should accompany accuracy as an evaluation criterion [1]. Poddar et al. report associations between inference energy, output length and response time, and investigate prompting and system settings [2]. The present experiment is a small application of these questions to testable code generation on a consumer CPU. It does not claim a novel energy meter, a new model, or the first demonstration that response length matters. HumanEval supplies programming tasks and executable checks [3]; Qwen2.5-Coder supplies the two code-oriented models [4].
 
-The central comparison is P1 versus P0: the instruction gains only “Return only code.” Comparing P1 against an example-guided prompt would mix the output restriction with demonstrations and instruction wording. P3 variants are instead compared descriptively with P0, while acknowledging their own wording change. Practical relevance rests on measuring the cost of usable output under stated conditions, not on attributing internal thought processes to a model.
+The report compares task-completion instructions, example-guided prompts, and prompts that request explanations before code. We examine output length, test success and resource cost together. Some comparisons change more than one feature: P3 adds examples and changes the instruction wording. P1 versus P0 is a narrower comparison because it adds only “Return only code.” Keeping these differences visible helps us avoid attributing every result to a single prompt feature.
 
 
 ## 2. Experimental setup and protocol
@@ -61,7 +61,7 @@ Within each model, we align the same 40 tasks across arms. For each contrast A-B
 For the baseline sensitivity, the same saved gross integrals and post-load seconds are evaluated against constant end and midpoint baselines. These scenarios change an assumption; they neither reconstruct the idle trajectory nor replace the registered estimates. The pilot contributes supplementary repeat diagnostics only. 
 
 
-## 4. Results: paired contrasts are the central comparison
+## 4. Results: paired comparisons across prompt variants
 
 ![Figure 1](../../results/p4-revision/01_paired_contrasts.png)
 
@@ -198,9 +198,15 @@ A separate prefix-cache experiment could compare controlled shared prefixes with
 
 ## 11. Conclusion
 
-In this consumer-CPU experiment, adding a code-only instruction to a minimal prompt was associated with substantially shorter responses and lower estimated CPU package energy. Accuracy differences were uncertain under task-paired resampling. Example-guided and explanation-requesting prompts showed model-dependent correctness and cost; per-attempt rankings differed from per-correct rankings. The strongest practical lesson is to evaluate output cost together with verified success under the intended runtime, while preserving measurement limitations. It is not yet justified to claim that one prompt style universally saves energy without affecting accuracy.
+The main lesson from these runs is that a longer answer did not necessarily produce better code. On the 1.5B model, the step-by-step prompt P4 averaged 526.5 output tokens and passed 27 of 40 tasks. The code-only prompt P1 averaged 71.1 tokens and passed 29. That is a clear difference in response length, but two extra passes are not enough to establish a reliable accuracy advantage.
 
-AI assistance was used for analysis implementation, source-based failure annotations and manuscript preparation. The annotation review has no independent second annotator. This report presents an exploratory experiment for research discussion.
+Another useful finding came from the 0.5B model. P3_3 had the lowest mean energy per attempt, yet passed only 19 tasks. P1 passed 24 and had a lower energy cost per correct solution. Looking only at cheap responses would have missed that distinction.
+
+We would take these observations forward by measuring useful results, not just output length or cost in isolation. This remains a small experiment on one machine, and the baseline drift makes the absolute net-energy values uncertain. A follow-up needs more stable power measurements, repeated sessions and prompts that vary one feature at a time before we can make broader recommendations.
+
+## AI assistance
+
+AI tools helped set up the experiment and run the registered Ollama requests automatically. They also assisted with figures and the wording of this report. The failure annotations were AI-assisted and were checked against the saved responses; no independent second annotator was used.
 
 ## References
 

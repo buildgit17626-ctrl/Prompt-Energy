@@ -519,3 +519,15 @@ abstract explaining why prompt-related resource use merits evaluation alongside
 correctness. The opening states the small exploratory scope and separates
 measured CPU package estimates from unmeasured battery, financial or carbon
 outcomes. No experimental or statistical registration changes.
+
+
+## Report wording and summary amendment (2026-10-28)
+
+Owner selected the exact report title: Report and code: Prompt design and the
+energy cost of correct code. Rewrite abstract/conclusion in plain language and
+retain concrete findings and caveats; P1-P0 is one comparison, not the headline.
+Use report terminology. Describe AI-assisted setup, automated Ollama requests,
+figures/text and source-review annotations accurately, without the phrase
+analysis implementation or implying independent human annotation. Add a two-page
+Times New Roman overview with why/hypotheses/observations/plots/conclusion.
+This is presentation only: existing data, H1-H5 and statistical rules unchanged.
