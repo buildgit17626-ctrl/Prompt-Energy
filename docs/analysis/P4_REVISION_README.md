@@ -1,13 +1,13 @@
 # Revised professor discussion packet
 
-The editable paper is P4_MANUSCRIPT.md; its checked PDF is
+The editable report is P4_MANUSCRIPT.md; its checked PDF is
 output/pdf/P4_revised_manuscript.pdf. The historical P4_baseline_brief.pdf path
-now receives the same revised paper to prevent sharing the superseded headline.
+now receives the same revised report to prevent sharing the superseded headline.
 Earlier comparison graphics remain supplementary, not the revised main narrative.
 
 ## Current packet and coverage
 
-The PDF contains a continuously paginated A4 paper plus one A1 landscape comparison sheet. Main body,
+The PDF contains a continuously paginated A4 report plus one A1 landscape comparison sheet. Main body,
 tables, captions and references use embedded Times New Roman at 14 pt; headings
 are larger, and page footers smaller. Continuous flow replaces artificial section
 page breaks. The final A1 page supports digital zoom and large-format printing.
@@ -64,6 +64,29 @@ in the selected sample; do not extrapolate zero to every generation.
   prevalence estimates. Truncation takes precedence even with a complete function.
 - End/midpoint baselines are constant alternatives, not a fitted drift correction.
 - Energy/token includes prompt and overhead cost; it cannot isolate decode energy.
-- The paper is prepared for research discussion; its limitations and AI-assisted
+- The report is prepared for research discussion; its limitations and AI-assisted
   annotation provenance remain explicit. Numerical auditing is not independent
   expert validation of the scientific conclusions.
+
+
+## Two-page overview (2026-10-28)
+
+P4_SUMMARY.md is the editable overview; output/pdf/P4_two_page_summary.pdf is
+exactly two A4 pages. It contains why/setup, shortened H1-H5, pass-rate and
+energy-per-correct figures, observations, limitations and a concrete conclusion.
+It uses Times New Roman 14-point body text and the same paragraph spacing as the
+full report. All numerical values come from stage 1; repeat coverage is labelled.
+
+The full report now uses the exact owner-selected neutral title and plain-language
+abstract/conclusion. AI assistance is described as setup, automated Ollama runs,
+figures/text and assisted annotations; no independent second review is implied.
+The legacy manuscript filename remains for stable links. The title inside both
+PDFs and PDF metadata says report, not paper. No inference or rescoring occurred.
+
+Generate the summary pass-rate plot with the study Python by calling
+analysis.presentation.accuracy on results/p4-analysis/all_rows/summary.csv, with
+Times New Roman configured and results/p4-summary as the destination. The main
+review_revision command already produces the energy-per-correct plot. Render the
+summary with the bundled PDF Python:
+`-m analysis.build_manuscript --source docs/analysis/P4_SUMMARY.md
+--output output/pdf/P4_two_page_summary.pdf --no-comparison-sheet` (one command).
